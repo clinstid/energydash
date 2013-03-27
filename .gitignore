@@ -1,1 +1,5 @@
-env
+.env
+*.sqlite3
+settings.py
+\.*\.swp
+*.pyc
