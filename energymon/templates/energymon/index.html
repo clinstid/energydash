@@ -1,0 +1,10 @@
+{% if latest_usage_list %}
+    <ul>
+        {% for usage in latest_usage_list %}
+        <li>date: {{ usage.time_of_reading }} watts: {{ usage.watts }}</li>
+        {% endfor %}
+    </ul>
+{% else %}
+    <p>No usage data available.</p>
+{% endif %}
+
