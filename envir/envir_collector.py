@@ -3,24 +3,27 @@ from serial import *
 import sys
 import pika
 
-ser = Serial(port='/dev/ttyUSB0',
-             baudrate=57600,
-             bytesize=EIGHTBITS,
-             parity=PARITY_NONE,
-             stopbits=STOPBITS_ONE,
-             timeout=5)
+from envir_settings import *
+
+ser = Serial(port=ENVIR_SERIAL_PORT,
+             baudrate=ENVIR_SERIAL_BAUDRATE,
+             bytesize=ENVIR_SERIAL_BYTESIZE,
+             parity=ENVIR_SERIAL_PARITY,
+             stopbits=ENVIR_SERIAL_STOPBITS,
+             timeout=ENVIR_SERIAL_TIMEOUT)
+
+# TODO - Need to use a logger!
 output = open('envir.log', 'a', 1)
 
-connection = pika.BlockingConnection(pika.ConnectionParameters(host='localhost'))
+connection = pika.BlockingConnection(pika.ConnectionParameters(host=ENVIR_MSG_HOST))
 channel = connection.channel()
-QUEUE_NAME = 'envir'
-channel.queue_declare(queue=QUEUE_NAME)
+channel.queue_declare(queue=ENVIR_QUEUE_NAME)
 
 while True:
     try:
-        message = ser.read(64)
+        message = ser.readline()
         channel.basic_publish(exchange='',
-                              routing_key=QUEUE_NAME,
+                              routing_key=ENVIR_QUEUE_NAME,
                               body=message)
         output.write(message)
         sys.stdout.write(message)
