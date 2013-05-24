@@ -22,12 +22,14 @@ channel.queue_declare(queue=ENVIR_QUEUE_NAME, durable=True)
 while True:
     try:
         message = ser.readline()
-        channel.basic_publish(exchange='',
-                              routing_key=ENVIR_QUEUE_NAME,
-                              body=message,
-                              properties=pika.BasicProperties(delivery_mode=2))
-        output.write(message)
-        sys.stdout.write('"{}"\n'.format(message))
+        if len(message):
+            message = message.rstrip()
+            channel.basic_publish(exchange='',
+                                  routing_key=ENVIR_QUEUE_NAME,
+                                  body=message,
+                                  properties=pika.BasicProperties(delivery_mode=2))
+            output.write(message)
+            sys.stdout.write('"{}"\n'.format(message))
     except KeyboardInterrupt:
         print "Caught keyboard interrupt, exiting."
         output.flush()
