@@ -68,8 +68,8 @@ class Msg(object):
         time_delta_since_birth = timedelta(days=self.dsb, seconds=seconds, minutes=minutes, hours=hours)
         self.timestamp = EnviR.birth_date + time_delta_since_birth
 
-    def print_csv(self):
-        print '"{timestamp}",{total_watts}'.format(timestamp=self.timestamp, total_watts=self.total_watts)
+    def print_csv(self, output_file):
+         output_file.write('"{timestamp}",{total_watts}\n'.format(timestamp=self.timestamp, total_watts=self.total_watts))
 
     @staticmethod
     def get_text_as_float(elem, tag):
@@ -89,7 +89,7 @@ class Msg(object):
 
 def main():
     if len(sys.argv) < 2:
-        print "Usage: {} <xml-file>".format(sys.argv[0])
+        print "Usage: {} <xml-file> [<output-csv-file>]".format(sys.argv[0])
         sys.exit()
 
     xml_file = open(sys.argv[1])
@@ -110,6 +110,15 @@ def main():
 
         if tree.tag == EnviR.MSG_TAG:
             messages.append(Msg(tree))
+
+    output_file = sys.stdout
+    if len(sys.argv) == 3:
+        output_file = open(sys.argv[2], 'w')
+
+    for message in messages:
+        message.print_csv(output_file)
+
+    output_file.close()
 
 if __name__ == '__main__':
     main()
