@@ -30,9 +30,9 @@ class Envir:
 
     def __init__(self):
         self.connection = pika.BlockingConnection(pika.ConnectionParameters(host=ENVIR_MSG_HOST))
-        self.channel = connection.channel()
+        self.channel = self.connection.channel()
         self.channel.queue_declare(queue=ENVIR_QUEUE_NAME, durable=True)
-        self.channel.basic_consume(handle_message,
+        self.channel.basic_consume(Envir.handle_message,
                                    queue=ENVIR_QUEUE_NAME,
                                    no_ack=False)
 
@@ -41,8 +41,13 @@ class Envir:
 
     @staticmethod
     def handle_message(ch, method, properties, body):
-        msg = Msg(body)
-        msg.print_csv()
+        try:
+            msg = Msg(body)
+        except ET.ParseError as e:
+            print "Skipping '{}': {}".format(body, repr(e))
+            return
+
+        msg.print_csv(sys.stdout)
         ch.basic_ack(delivery_tag=method.delivery_tag)
 
 class MsgException(Exception):
@@ -53,33 +58,33 @@ class Msg(object):
     def __init__(self, body):
         root = ET.fromstring(body)
 
-        if not root.tag == EnviR.MSG_TAG:
+        if not root.tag == Envir.MSG_TAG:
             raise MsgException('Unexpected tag "{}" encountered. Expected "{}"'.format(root.tag,
-                                                                                       EnviR.MSG_TAG))
+                                                                                       Envir.MSG_TAG))
 
-        self.src = root.findtext(EnviR.SRC_TAG)
-        self.dsb = Msg.get_text_as_int(root, EnviR.DAYS_SINCE_BIRTH_TAG)
-        self.time24 = root.findtext(EnviR.TIME_TAG)
-        self.temp_c = Msg.get_text_as_float(root, EnviR.TEMP_C_TAG)
-        self.temp_f = Msg.get_text_as_float(root, EnviR.TEMP_F_TAG)
-        self.radio_id = Msg.get_text_as_int(root, EnviR.RADIO_ID_TAG)
-        self.sensor_type = Msg.get_text_as_int(root, EnviR.TYPE_TAG)
+        self.src = root.findtext(Envir.SRC_TAG)
+        self.dsb = Msg.get_text_as_int(root, Envir.DAYS_SINCE_BIRTH_TAG)
+        self.time24 = root.findtext(Envir.TIME_TAG)
+        self.temp_c = Msg.get_text_as_float(root, Envir.TEMP_C_TAG)
+        self.temp_f = Msg.get_text_as_float(root, Envir.TEMP_F_TAG)
+        self.radio_id = Msg.get_text_as_int(root, Envir.RADIO_ID_TAG)
+        self.sensor_type = Msg.get_text_as_int(root, Envir.TYPE_TAG)
 
         self.ch1_watts = 0
         self.ch2_watts = 0
         self.ch3_watts = 0
 
-        ch1 = root.find(EnviR.CH1_TAG)
+        ch1 = root.find(Envir.CH1_TAG)
         if ch1 is not None:
-            self.ch1_watts = Msg.get_text_as_int(ch1, EnviR.WATTS_TAG)
+            self.ch1_watts = Msg.get_text_as_int(ch1, Envir.WATTS_TAG)
 
-        ch2 = root.find(EnviR.CH2_TAG)
+        ch2 = root.find(Envir.CH2_TAG)
         if ch2 is not None:
-            self.ch2_watts = Msg.get_text_as_int(ch2, EnviR.WATTS_TAG)
+            self.ch2_watts = Msg.get_text_as_int(ch2, Envir.WATTS_TAG)
 
-        ch3 = root.find(EnviR.CH3_TAG)
+        ch3 = root.find(Envir.CH3_TAG)
         if ch3 is not None:
-            self.ch3_watts = Msg.get_text_as_int(ch3, EnviR.WATTS_TAG)
+            self.ch3_watts = Msg.get_text_as_int(ch3, Envir.WATTS_TAG)
 
         if not self.ch1_watts:
             self.ch1_watts = 0
@@ -97,7 +102,7 @@ class Msg(object):
         minutes = int(time_split[1])
         seconds = int(time_split[2])
         time_delta_since_birth = timedelta(days=self.dsb, seconds=seconds, minutes=minutes, hours=hours)
-        self.timestamp = EnviR.birth_date + time_delta_since_birth
+        self.timestamp = Envir.birth_date + time_delta_since_birth
 
     def print_csv(self, output_file):
          output_file.write('"{timestamp}",{total_watts}\n'.format(timestamp=self.timestamp, total_watts=self.total_watts))
