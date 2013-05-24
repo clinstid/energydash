@@ -17,14 +17,15 @@ output = open('envir.log', 'a', 1)
 
 connection = pika.BlockingConnection(pika.ConnectionParameters(host=ENVIR_MSG_HOST))
 channel = connection.channel()
-channel.queue_declare(queue=ENVIR_QUEUE_NAME)
+channel.queue_declare(queue=ENVIR_QUEUE_NAME, durable=True)
 
 while True:
     try:
         message = ser.readline()
         channel.basic_publish(exchange='',
                               routing_key=ENVIR_QUEUE_NAME,
-                              body=message)
+                              body=message,
+                              properties=pika.BasicProperties(delivery_mode=2))
         output.write(message)
         sys.stdout.write(message)
     except KeyboardInterrupt:
