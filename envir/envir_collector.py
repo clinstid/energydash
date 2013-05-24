@@ -8,7 +8,7 @@ ser = Serial(port='/dev/ttyUSB0',
              parity=PARITY_NONE,
              stopbits=STOPBITS_ONE,
              timeout=5)
-output = open('envir.log', 'w', 1)
+output = open('envir.log', 'a', 1)
 
 while True:
     try:
