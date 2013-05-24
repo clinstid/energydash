@@ -27,7 +27,7 @@ while True:
                               body=message,
                               properties=pika.BasicProperties(delivery_mode=2))
         output.write(message)
-        sys.stdout.write('"{}"'.format(message))
+        sys.stdout.write('"{}"\n'.format(message))
     except KeyboardInterrupt:
         print "Caught keyboard interrupt, exiting."
         output.flush()
