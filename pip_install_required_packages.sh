@@ -3,7 +3,11 @@ ENV_DIR=.env
 
 if [ ! -d $ENV_DIR ]; then
     echo Creating virtualenv for project.
-    virtualenv $ENV_DIR
+    virtualenv $ENV_DIR 
+    if [ $? != 0 ]; then
+        echo Missing virtualenv.
+        exit -1
+    fi
     echo Done.
 fi
 
