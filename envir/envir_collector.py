@@ -22,7 +22,7 @@ channel.queue_declare(queue=ENVIR_QUEUE_NAME, durable=True)
 while True:
     try:
         message = ser.readline()
-        if len(message):
+        if len(message) > 0:
             message = message.rstrip()
             channel.basic_publish(exchange='',
                                   routing_key=ENVIR_QUEUE_NAME,
