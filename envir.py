@@ -7,6 +7,8 @@ import pytz
 import pika
 
 from envir_settings import *
+from database import db_session
+from models import Usage
 
 class Envir:
     MSG_TAG = 'msg'
@@ -26,7 +28,7 @@ class Envir:
     birth_date = datetime(year=ENVIR_BIRTH_YEAR, 
                           month=ENVIR_BIRTH_MONTH, 
                           day=ENVIR_BIRTH_DAY, 
-                          tzinfo=pytz.timezone(ENVIR_BIRTH_TZ))
+                          tzinfo=pytz.timezone(ENVIR_BIRTH_TZ_NAME))
 
     def __init__(self):
         self.connection = pika.BlockingConnection(pika.ConnectionParameters(host=ENVIR_MSG_HOST))
@@ -43,11 +45,13 @@ class Envir:
     def handle_message(ch, method, properties, body):
         try:
             msg = Msg(body)
+            msg.print_csv(sys.stdout)
+            usage = Usage(timestamp=msg.timestamp, usage_in_watts=msg.total_watts)
+            db_session.add(usage)
+            db_session.commit()
         except ET.ParseError as e:
             print "Skipping '{}': {}".format(body, repr(e))
-            return
 
-        msg.print_csv(sys.stdout)
         ch.basic_ack(delivery_tag=method.delivery_tag)
 
 class MsgException(Exception):
@@ -103,6 +107,7 @@ class Msg(object):
         seconds = int(time_split[2])
         time_delta_since_birth = timedelta(days=self.dsb, seconds=seconds, minutes=minutes, hours=hours)
         self.timestamp = Envir.birth_date + time_delta_since_birth
+        self.received_timestamp = datetime.now(tz=pytz.timezone(ENVIR_BIRTH_TZ_NAME))
 
     def print_csv(self, output_file):
          output_file.write('"{timestamp}",{total_watts}\n'.format(timestamp=self.timestamp, total_watts=self.total_watts))

@@ -15,7 +15,7 @@ ENVIR_QUEUE_NAME = 'envir'
 ENVIR_BIRTH_YEAR = 2013
 ENVIR_BIRTH_MONTH = 5
 ENVIR_BIRTH_DAY = 18
-ENVIR_BIRTH_TZ = 'America/New_York'
+ENVIR_BIRTH_TZ_NAME = 'America/New_York'
 
 # Serial port options
 ENVIR_SERIAL_PORT = '/dev/ttyUSB0'
