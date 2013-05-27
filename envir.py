@@ -70,7 +70,7 @@ class Envir(object):
             db_session.add(usage)
             db_session.commit()
         except ET.ParseError as e:
-            print "Invalid XML, skipping '{}': {}".format(body, repr(e))
+            print "Invalid XML, skipping '{}': {}".format(message.body, repr(e))
 
         message.channel.basic_ack(message.delivery_tag)
 
