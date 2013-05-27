@@ -37,12 +37,12 @@ class Envir(object):
                           tzinfo=tzlocal())
 
     def __init__(self):
-        print "** Connecting to rabbitmq {}".format(ENVIR_MSG_HOST)
+        print ">> Connecting to rabbitmq {}".format(ENVIR_MSG_HOST)
         self.connection = amqp.Connection(host=ENVIR_MSG_HOST)
         self.channel = self.connection.channel()
         self.channel.access_request('/data', active=True, read=True) 
         self.channel.exchange_declare(exchange=ENVIR_EXCHANGE_NAME, 
-                                      type='fanout',
+                                      type='direct',
                                       auto_delete=False,
                                       durable=True)
         self.channel.queue_declare(queue=ENVIR_MSG_QUEUE_NAME,
@@ -50,14 +50,14 @@ class Envir(object):
                                    auto_delete=False)
         self.channel.queue_bind(queue=ENVIR_MSG_QUEUE_NAME,
                                 exchange=ENVIR_EXCHANGE_NAME)
-        self.channel.basic_consume(self.queue_name, callback=Envir.handle_message)
+        self.channel.basic_consume(ENVIR_MSG_QUEUE_NAME, callback=Envir.handle_message)
 
     def cleanup(self):
         self.channel.close()
         self.connection.close()
 
     def run(self):
-        print "** envir running"
+        print ">> envir running"
         while self.channel.callbacks:
             self.channel.wait()
 
