@@ -55,6 +55,7 @@ def main():
             output.close()
             channel.close()
             connection.close()
+            ser.close()
             sys.exit()
 
 if __name__ == '__main__':
