@@ -33,7 +33,7 @@ while True:
         line = ser.readline()
         if len(line) > 0:
             output.write(line)
-            print ">> Received line: {}\n".format(line))
+            print ">> Received line: {}\n".format(line)
             message = amqp.Message(body=line.rstrip(),
                                    content_type='text/plain')
             channel.basic_publish(msg=message,
