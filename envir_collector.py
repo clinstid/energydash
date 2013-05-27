@@ -24,16 +24,9 @@ def main():
     channel.access_request('/data', active=True, write=True)
     print ">> Declaring exchange '{}'".format(ENVIR_EXCHANGE_NAME)
     channel.exchange_declare(exchange=ENVIR_EXCHANGE_NAME, 
-                             type='direct',
+                             type='fanout',
                              auto_delete=False,
                              durable=True)
-    print ">> Declaring queue '{}'".format(ENVIR_MSG_QUEUE_NAME)
-    channel.queue_declare(queue=ENVIR_MSG_QUEUE_NAME,
-                          durable=True,
-                          auto_delete=False)
-    print ">> Binding queue to exchange."
-    channel.queue_bind(queue=ENVIR_MSG_QUEUE_NAME,
-                       exchange=ENVIR_EXCHANGE_NAME)
 
     print ">> Waiting for data..."
     while True:
@@ -47,7 +40,7 @@ def main():
                                        delivery_mode=2)
                 channel.basic_publish(msg=message,
                                       exchange=ENVIR_EXCHANGE_NAME,
-                                      routing_key=ENVIR_MSG_QUEUE_NAME)
+                                      routing_key='')
                 print ">> Queued message."
         except KeyboardInterrupt:
             print "Caught keyboard interrupt, exiting."
