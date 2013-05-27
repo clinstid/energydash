@@ -35,6 +35,7 @@ def main():
     channel.queue_bind(queue=ENVIR_MSG_QUEUE_NAME,
                        exchange=ENVIR_EXCHANGE_NAME)
 
+    print ">> Waiting for data..."
     while True:
         try:
             line = ser.readline()
