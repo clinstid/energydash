@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 from serial import *
 import sys
-import pika
+import amqplib.client_0_8 as amqp
 
 from envir_settings import *
 
@@ -15,24 +15,29 @@ ser = Serial(port=ENVIR_SERIAL_PORT,
 # TODO - Need to use a logger!
 output = open('envir.log', 'a', 1)
 
-connection = pika.BlockingConnection(pika.ConnectionParameters(host=ENVIR_MSG_HOST))
+connection = amqp.connection(host=ENVIR_MSG_HOST)
 channel = connection.channel()
-channel.queue_declare(queue=ENVIR_QUEUE_NAME, durable=True)
+channel.access_request('/data', active=True, write=True)
+channel.exchange_declare(exchange=ENVIR_EXCHANGE_NAME, 
+                         type='fanout',
+                         auto_delete=False,
+                         durable=True)
 
 while True:
     try:
-        message = ser.readline()
+        line = ser.readline()
         if len(message) > 0:
-            message = message.rstrip()
-            channel.basic_publish(exchange='',
-                                  routing_key=ENVIR_QUEUE_NAME,
-                                  body=message,
-                                  properties=pika.BasicProperties(delivery_mode=2))
-            output.write(message)
-            sys.stdout.write('"{}"\n'.format(message))
+            message = amqp.Message(body=line.rstrip(),
+                                   content_type='text/plain')
+            channel.basic_publish(msg=message,
+                                  exchange=ENVIR_EXCHANGE_NAME)
+            output.write(line)
+            sys.stdout.write('"{}"\n'.format(line))
     except KeyboardInterrupt:
         print "Caught keyboard interrupt, exiting."
         output.flush()
         output.close()
+        channel.close()
+        connection.close()
         sys.exit()
 

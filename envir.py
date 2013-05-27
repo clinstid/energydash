@@ -5,13 +5,16 @@ import xml.etree.ElementTree as ET
 from datetime import datetime, timedelta
 from dateutil.tz import tzlocal
 import pytz
-import pika
 from time import sleep
+import logging
+import amqplib.client_0_8 as amqp
 
 from envir_settings import *
 from database import db_session
 from models import Usage
 from settings import LOCAL_TIMEZONE
+
+LOGGER = logging.getLogger(__name__)
 
 class Envir(object):
     MSG_TAG = 'msg'
@@ -34,39 +37,31 @@ class Envir(object):
                           tzinfo=tzlocal())
 
     def __init__(self):
-        self.reconnect()
+        print "** Connecting to rabbitmq {}".format(ENVIR_MSG_HOST)
+        self.connection = amqp.connection(host=ENVIR_MSG_HOST)
+        self.channel = self.connection.channel()
+        self.channel.access_request('/data', active=True, read=True) 
+        self.channel.exchange_declare(exchange=ENVIR_EXCHANGE_NAME, 
+                                      type='fanout',
+                                      auto_delete=False,
+                                      durable=True)
+        self.queue_name = self.channel.queue_declare()
+        self.channel.queue_bind(self.queue_name, ENVIR_EXCHANGE_NAME)
+        self.channel.basic_consume(self.queue_name, callback=Envir.handle_message)
 
     def cleanup(self):
-        self.channel.stop_consuming()
+        self.channel.close()
         self.connection.close()
-
-    def reconnect(self):
-        while True:
-            try:
-                print "** Connecting to rabbitmq"
-                self.connection = pika.BlockingConnection(pika.ConnectionParameters(host=ENVIR_MSG_HOST))
-                self.channel = self.connection.channel()
-                self.channel.queue_declare(queue=ENVIR_QUEUE_NAME, durable=True)
-                self.channel.basic_consume(Envir.handle_message,
-                                           queue=ENVIR_QUEUE_NAME,
-                                           no_ack=False)
-                break
-            except pika.exceptions.ConnectionClosed as e:
-                print "** Connection closed, reconnecting"
-                sleep(1)
 
     def run(self):
         print "** envir running"
-        while True:
-            try:
-                self.channel.start_consuming()
-            except pika.exceptions.ConnectionClosed as e:
-                self.reconnect()
+        while self.channel.callbacks:
+            self.channel.wait()
 
     @staticmethod
-    def handle_message(ch, method, properties, body):
+    def handle_message(message):
         try:
-            msg = Msg(body)
+            msg = Msg(message.body)
             msg.print_csv(sys.stdout)
             if msg.usage_in_watts > 0:
                 usage = Usage(timestamp=msg.timestamp.astimezone(pytz.utc), usage_in_watts=msg.total_watts)
@@ -77,7 +72,7 @@ class Envir(object):
         except ET.ParseError as e:
             print "Skipping '{}': {}".format(body, repr(e))
 
-        ch.basic_ack(delivery_tag=method.delivery_tag)
+        message.channel.basic_ack(message.delivery_tag)
 
 class MsgException(Exception):
     pass

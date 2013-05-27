@@ -9,7 +9,7 @@ from settings import LOCAL_TIMEZONE
 
 # Settings for rabbitmq 
 ENVIR_MSG_HOST = 'revan'
-ENVIR_QUEUE_NAME = 'envir'
+ENVIR_EXCHANGE_NAME = 'envir'
 
 # The XML provided by the EnviR includes "days since birth" so we need to know
 # the "birth date" so we can calculate the actual timestamp for each message.
