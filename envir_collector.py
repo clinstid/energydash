@@ -25,6 +25,8 @@ channel.exchange_declare(exchange=ENVIR_EXCHANGE_NAME,
 channel.queue_declare(queue=ENVIR_MSG_QUEUE_NAME,
                       durable=True,
                       auto_delete=False)
+channel.queue_bind(queue=ENVIR_MSG_QUEUE_NAME,
+                   exchange=ENVIR_EXCHANGE_NAME)
 
 while True:
     try:
@@ -35,8 +37,6 @@ while True:
             channel.basic_publish(msg=message,
                                   exchange=ENVIR_EXCHANGE_NAME,
                                   routing_key=ENVIR_MSG_QUEUE_NAME)
-            self.channel.queue_bind(queue=ENVIR_MSG_QUEUE_NAME,
-                                    exchange=ENVIR_EXCHANGE_NAME)
             output.write(line)
             sys.stdout.write('"{}"\n'.format(line))
     except KeyboardInterrupt:
