@@ -8,7 +8,7 @@ import serial
 from settings import LOCAL_TIMEZONE
 
 # Settings for rabbitmq 
-ENVIR_MSG_HOST = 'revan'
+ENVIR_MSG_HOST = 'malak'
 ENVIR_EXCHANGE_NAME = 'envir'
 ENVIR_MSG_QUEUE_NAME = 'envir'
 
