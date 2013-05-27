@@ -19,9 +19,12 @@ connection = amqp.Connection(host=ENVIR_MSG_HOST)
 channel = connection.channel()
 channel.access_request('/data', active=True, write=True)
 channel.exchange_declare(exchange=ENVIR_EXCHANGE_NAME, 
-                         type='fanout',
+                         type='direct',
                          auto_delete=False,
                          durable=True)
+channel.queue_declare(queue=ENVIR_MSG_QUEUE_NAME,
+                      durable=True,
+                      auto_delete=False)
 
 while True:
     try:
@@ -30,7 +33,8 @@ while True:
             message = amqp.Message(body=line.rstrip(),
                                    content_type='text/plain')
             channel.basic_publish(msg=message,
-                                  exchange=ENVIR_EXCHANGE_NAME)
+                                  exchange=ENVIR_EXCHANGE_NAME,
+                                  routing_key=ENVIR_MSG_QUEUE_NAME)
             output.write(line)
             sys.stdout.write('"{}"\n'.format(line))
     except KeyboardInterrupt:

@@ -38,15 +38,18 @@ class Envir(object):
 
     def __init__(self):
         print "** Connecting to rabbitmq {}".format(ENVIR_MSG_HOST)
-        self.connection = amqp.connection(host=ENVIR_MSG_HOST)
+        self.connection = amqp.Connection(host=ENVIR_MSG_HOST)
         self.channel = self.connection.channel()
         self.channel.access_request('/data', active=True, read=True) 
         self.channel.exchange_declare(exchange=ENVIR_EXCHANGE_NAME, 
                                       type='fanout',
                                       auto_delete=False,
                                       durable=True)
-        self.queue_name = self.channel.queue_declare()
-        self.channel.queue_bind(self.queue_name, ENVIR_EXCHANGE_NAME)
+        self.channel.queue_declare(queue=ENVIR_MSG_QUEUE_NAME,
+                                   durable=True,
+                                   auto_delete=False)
+        self.channel.queue_bind(queue=ENVIR_MSG_QUEUE_NAME,
+                                exchange=ENVIR_EXCHANGE_NAME)
         self.channel.basic_consume(self.queue_name, callback=Envir.handle_message)
 
     def cleanup(self):
@@ -63,14 +66,11 @@ class Envir(object):
         try:
             msg = Msg(message.body)
             msg.print_csv(sys.stdout)
-            if msg.usage_in_watts > 0:
-                usage = Usage(timestamp=msg.timestamp.astimezone(pytz.utc), usage_in_watts=msg.total_watts)
-                db_session.add(usage)
-                db_session.commit()
-            else:
-                print "** Skipping zero reading."
+            usage = Usage(timestamp=msg.timestamp.astimezone(pytz.utc), usage_in_watts=msg.total_watts)
+            db_session.add(usage)
+            db_session.commit()
         except ET.ParseError as e:
-            print "Skipping '{}': {}".format(body, repr(e))
+            print "Invalid XML, skipping '{}': {}".format(body, repr(e))
 
         message.channel.basic_ack(message.delivery_tag)
 
