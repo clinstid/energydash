@@ -5,6 +5,7 @@
 # This file contains settings for an EnviR power monitor feed into a collector.
 # Make sure you share the settings for both the collector and the receiver.
 import serial
+from settings import LOCAL_TIMEZONE
 
 # Settings for rabbitmq 
 ENVIR_MSG_HOST = 'malak'
@@ -15,7 +16,7 @@ ENVIR_QUEUE_NAME = 'envir'
 ENVIR_BIRTH_YEAR = 2013
 ENVIR_BIRTH_MONTH = 5
 ENVIR_BIRTH_DAY = 18
-ENVIR_BIRTH_TZ_NAME = 'America/New_York'
+ENVIR_BIRTH_TZ_NAME = LOCAL_TIMEZONE
 
 # Serial port options
 ENVIR_SERIAL_PORT = '/dev/ttyUSB0'

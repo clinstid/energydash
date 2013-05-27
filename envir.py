@@ -3,14 +3,17 @@ import sys
 import string
 import xml.etree.ElementTree as ET
 from datetime import datetime, timedelta
+from dateutil.tz import tzlocal
 import pytz
 import pika
+from time import sleep
 
 from envir_settings import *
 from database import db_session
 from models import Usage
+from settings import LOCAL_TIMEZONE
 
-class Envir:
+class Envir(object):
     MSG_TAG = 'msg'
     SRC_TAG = 'src'
     DAYS_SINCE_BIRTH_TAG = 'dsb'
@@ -28,27 +31,49 @@ class Envir:
     birth_date = datetime(year=ENVIR_BIRTH_YEAR, 
                           month=ENVIR_BIRTH_MONTH, 
                           day=ENVIR_BIRTH_DAY, 
-                          tzinfo=pytz.timezone(ENVIR_BIRTH_TZ_NAME))
+                          tzinfo=tzlocal())
 
     def __init__(self):
-        self.connection = pika.BlockingConnection(pika.ConnectionParameters(host=ENVIR_MSG_HOST))
-        self.channel = self.connection.channel()
-        self.channel.queue_declare(queue=ENVIR_QUEUE_NAME, durable=True)
-        self.channel.basic_consume(Envir.handle_message,
-                                   queue=ENVIR_QUEUE_NAME,
-                                   no_ack=False)
+        self.reconnect()
 
-    def start(self):
-        self.channel.start_consuming()
+    def cleanup(self):
+        self.channel.stop_consuming()
+        self.connection.close()
+
+    def reconnect(self):
+        while True:
+            try:
+                print "** Connecting to rabbitmq"
+                self.connection = pika.BlockingConnection(pika.ConnectionParameters(host=ENVIR_MSG_HOST))
+                self.channel = self.connection.channel()
+                self.channel.queue_declare(queue=ENVIR_QUEUE_NAME, durable=True)
+                self.channel.basic_consume(Envir.handle_message,
+                                           queue=ENVIR_QUEUE_NAME,
+                                           no_ack=False)
+                break
+            except pika.exceptions.ConnectionClosed as e:
+                print "** Connection closed, reconnecting"
+                sleep(1)
+
+    def run(self):
+        print "** envir running"
+        while True:
+            try:
+                self.channel.start_consuming()
+            except pika.exceptions.ConnectionClosed as e:
+                self.reconnect()
 
     @staticmethod
     def handle_message(ch, method, properties, body):
         try:
             msg = Msg(body)
             msg.print_csv(sys.stdout)
-            usage = Usage(timestamp=msg.timestamp, usage_in_watts=msg.total_watts)
-            db_session.add(usage)
-            db_session.commit()
+            if msg.usage_in_watts > 0:
+                usage = Usage(timestamp=msg.timestamp.astimezone(pytz.utc), usage_in_watts=msg.total_watts)
+                db_session.add(usage)
+                db_session.commit()
+            else:
+                print "** Skipping zero reading."
         except ET.ParseError as e:
             print "Skipping '{}': {}".format(body, repr(e))
 
@@ -107,7 +132,7 @@ class Msg(object):
         seconds = int(time_split[2])
         time_delta_since_birth = timedelta(days=self.dsb, seconds=seconds, minutes=minutes, hours=hours)
         self.timestamp = Envir.birth_date + time_delta_since_birth
-        self.received_timestamp = datetime.now(tz=pytz.timezone(ENVIR_BIRTH_TZ_NAME))
+        self.received_timestamp = datetime.now(tz=pytz.timezone(LOCAL_TIMEZONE))
 
     def print_csv(self, output_file):
          output_file.write('"{timestamp}",{total_watts}\n'.format(timestamp=self.timestamp, total_watts=self.total_watts))
@@ -131,9 +156,10 @@ class Msg(object):
 def main():
     envir = Envir()
     try:
-        envir.start()
+        envir.run()
     except KeyboardInterrupt:
         print "Caught keyboard interrupt, exiting."
+        envir.cleanup()
         sys.exit()
 
 if __name__ == '__main__':

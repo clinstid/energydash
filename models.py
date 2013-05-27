@@ -5,7 +5,7 @@ class Usage(Base):
     __tablename__ = 'usage'
 
     id = Column(Integer, primary_key=True)
-    timestamp = Column(DateTime)
+    timestamp = Column(DateTime(timezone=True))
     usage_in_watts = Column(Integer)
 
     def __init__(self, timestamp, usage_in_watts):
