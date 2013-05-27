@@ -8,7 +8,7 @@ import serial
 from settings import LOCAL_TIMEZONE
 
 # Settings for rabbitmq 
-ENVIR_MSG_HOST = 'malak'
+ENVIR_MSG_HOST = 'revan'
 ENVIR_QUEUE_NAME = 'envir'
 
 # The XML provided by the EnviR includes "days since birth" so we need to know
