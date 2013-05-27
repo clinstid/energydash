@@ -27,6 +27,11 @@ def main():
                              type='fanout',
                              auto_delete=False,
                              durable=True)
+    channel.queue_declare(queue=ENVIR_MSG_QUEUE_NAME,
+                          durable=True,
+                          auto_delete=False)
+    channel.queue_bind(queue=ENVIR_MSG_QUEUE_NAME,
+                       exchange=ENVIR_EXCHANGE_NAME)
 
     print ">> Waiting for data..."
     while True:
@@ -40,7 +45,7 @@ def main():
                                        delivery_mode=2)
                 channel.basic_publish(msg=message,
                                       exchange=ENVIR_EXCHANGE_NAME,
-                                      routing_key='')
+                                      routing_key=ENVIR_MSG_QUEUE_NAME)
                 print ">> Queued message."
         except KeyboardInterrupt:
             print "Caught keyboard interrupt, exiting."

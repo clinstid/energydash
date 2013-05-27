@@ -45,11 +45,12 @@ class Envir(object):
                                       type='fanout',
                                       auto_delete=False,
                                       durable=True)
-        self.queue_name, _, _ = self.channel.queue_declare(durable=True,
-                                                           auto_delete=False)
-        self.channel.queue_bind(queue=self.queue_name,
+        self.channel.queue_declare(queue=ENVIR_MSG_QUEUE_NAME,
+                                   durable=True,
+                                   auto_delete=False)
+        self.channel.queue_bind(queue=ENVIR_MSG_QUEUE_NAME,
                                 exchange=ENVIR_EXCHANGE_NAME)
-        self.channel.basic_consume(self.queue_name, callback=Envir.handle_message)
+        self.channel.basic_consume(ENVIR_MSG_QUEUE_NAME, callback=Envir.handle_message)
 
     def cleanup(self):
         self.channel.close()
