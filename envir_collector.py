@@ -15,7 +15,7 @@ ser = Serial(port=ENVIR_SERIAL_PORT,
 # TODO - Need to use a logger!
 output = open('envir.log', 'a', 1)
 
-connection = amqp.connection(host=ENVIR_MSG_HOST)
+connection = amqp.Connection(host=ENVIR_MSG_HOST)
 channel = connection.channel()
 channel.access_request('/data', active=True, write=True)
 channel.exchange_declare(exchange=ENVIR_EXCHANGE_NAME, 
@@ -26,7 +26,7 @@ channel.exchange_declare(exchange=ENVIR_EXCHANGE_NAME,
 while True:
     try:
         line = ser.readline()
-        if len(message) > 0:
+        if len(line) > 0:
             message = amqp.Message(body=line.rstrip(),
                                    content_type='text/plain')
             channel.basic_publish(msg=message,
