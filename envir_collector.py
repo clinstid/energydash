@@ -32,13 +32,14 @@ while True:
     try:
         line = ser.readline()
         if len(line) > 0:
+            output.write(line)
+            print ">> Received line: {}\n".format(line))
             message = amqp.Message(body=line.rstrip(),
                                    content_type='text/plain')
             channel.basic_publish(msg=message,
                                   exchange=ENVIR_EXCHANGE_NAME,
                                   routing_key=ENVIR_MSG_QUEUE_NAME)
-            output.write(line)
-            sys.stdout.write('"{}"\n'.format(line))
+            print ">> Queued message."
     except KeyboardInterrupt:
         print "Caught keyboard interrupt, exiting."
         output.flush()
