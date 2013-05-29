@@ -1,8 +1,9 @@
 from sqlalchemy import create_engine
 from sqlalchemy.orm import scoped_session, sessionmaker
 from sqlalchemy.ext.declarative import declarative_base
+from settings import SQLITE_DATABASE_PATH
 
-engine = create_engine('sqlite:////home/clinstid/src/energymon/energymon.sqlite3', convert_unicode=True)
+engine = create_engine('sqlite:///{}'.format(SQLITE_DATABASE_PATH, convert_unicode=True))
 db_session = scoped_session(sessionmaker(autocommit=False,
                                          autoflush=False,
                                          bind=engine))
