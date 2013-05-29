@@ -37,7 +37,7 @@ class Minute(object):
     def dt_in_this_minute(self, dt):
         return (dt >= self.dt and dt < self.end_dt)
 
-    def add_reading(reading):
+    def add_reading(self, reading):
         total = float(self.average * self.reading_count)
         total += reading
         self.reading_count += 1
@@ -89,12 +89,14 @@ class Cache(object):
                               current_minute.average)
                 current_minute = Minute(entry.timestamp)
 
+            current_minute.add_reading(entry.usage_in_watts)
+
     def run(self):
         print ">> Starting energymon_cache."
         while True:
             now = datetime.now(tz=pytz.utc)
             self.update_cache(now)
-            sleep(30)
+            sleep(60)
 
 def main():
     cache = Cache()
