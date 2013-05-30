@@ -12,12 +12,7 @@ from models import Usage
 from database import db_session
 from energymon_app import app
 from settings import REDIS_HOST_NAME, REDIS_SET_NAME, REDIS_HASH_NAME
-
-def seconds_to_utc_dt(seconds):
-    return datetime(year=1970, month=1, day=1, tzinfo=pytz.utc) + relativedelta(seconds=+seconds)
-
-def utc_dt_to_seconds(utc_dt):
-    return (utc_dt - datetime(year=1970, month=1, day=1, tzinfo=pytz.utc)).total_seconds()
+from utc_conversion import *
 
 class Minute(object):
     def __init__(self, dt_in_minute):
@@ -29,7 +24,7 @@ class Minute(object):
                            second=0,
                            tzinfo=pytz.utc)
         self.end_dt = self.dt + relativedelta(minutes=+1)
-        self.seconds_since_epoch = int(round(utc_dt_to_seconds(self.dt)))
+        self.seconds_since_epoch = int(round(dt_to_seconds(self.dt)))
         self.average = 0
         self.reading_count = 0
         print ">>    Minute: {}".format(self.dt)
@@ -56,7 +51,7 @@ class Cache(object):
         result = self.red.zrange(REDIS_SET_NAME, -1, -1, withscores=True)
         query_start = now + relativedelta(years=-1)
         if len(result) > 0:
-            query_start = max(query_start, seconds_to_utc_dt(int(result[0][1])))
+            query_start = max(query_start, seconds_to_dt(int(result[0][1])))
         
         print ">>    Querying from {} to {}".format(query_start, now)
         query_complete = False
