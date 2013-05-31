@@ -25,7 +25,7 @@ def start_app():
 
     now = datetime.now(tz=pytz.utc)
     end = dt_to_seconds(now)
-    start = dt_to_seconds(now + relativedelta(hours=-8))
+    start = dt_to_seconds(now + relativedelta(days=-7))
     keys = r.zrangebyscore(REDIS_SET_NAME, start, end)
     pipe = r.pipeline()
     for key in keys:
@@ -46,7 +46,7 @@ def start_app():
     # jquery flot data_table
     data_table = []
     for i in range(min(len(keys), len(values))):
-        data_table.append([str(seconds_to_dt(keys[i])), int(values[i])])
+        data_table.append([int(keys[i])*1000, int(values[i])])
 
     return render_template('charts.html',
                            usage_data=data_table,

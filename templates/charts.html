@@ -6,10 +6,14 @@
     {{ super() }}
     <script language="javascript" type="text/javascript" src="{{ url_for('static', filename='js/jquery.js') }}"></script>
     <script language="javascript" type="text/javascript" src="{{ url_for('static', filename='js/flot/jquery.flot.js') }}"></script>
+    <script language="javascript" type="text/javascript" src="{{ url_for('static', filename='js/flot/jquery.flot.time.js') }}"></script>
     <script type="text/javascript">
         $(function() {
             var usage_data = {{ usage_data | safe }};
-            $.plot("#chart_div", usage_data);
+            var options = {
+                xaxis: { mode: "time" }
+            };
+            $.plot("#chart_div", [usage_data], options);
         });
     </script>
 {% endblock %}
