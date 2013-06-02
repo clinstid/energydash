@@ -9,6 +9,8 @@ alembic==0.5.0
 amqplib==1.0.2
 argparse==1.2.1
 distribute==0.6.24
+mongoengine==0.8.1
+pymongo==2.5.2
 pyserial==2.6
 python-dateutil==2.1
 pytz==2013b

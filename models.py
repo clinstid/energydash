@@ -1,20 +1,14 @@
-from sqlalchemy import Column, Integer, DateTime
-from database import Base
+from mongoengine import *
+from datetime import datetime
+import pytz
 
-class Usage(Base):
-    __tablename__ = 'usage'
-
-    id = Column(Integer, primary_key=True)
-    timestamp = Column(DateTime(timezone=True))
-    usage_in_watts = Column(Integer)
-
-    def __init__(self, timestamp, usage_in_watts):
-        self.timestamp = timestamp
-        self.usage_in_watts = usage_in_watts
-
-    def __repr__(self):
-        return '<Usage({timestamp}, {usage_in_watts})>'.format(timestamp=self.timestamp,
-                                                               usage_in_watts=self.usage_in_watts)
-
-
-
+class EnvirReading(Document):
+    reading_timestamp = DateTimeField(required=True,
+                                      default=datetime.now(tz=pytz.utc))
+    receiver_days_since_birth = IntField()
+    receiver_time = StringField()
+    ch1_watts = IntField()
+    ch2_watts = IntField()
+    ch3_watts = IntField()
+    total_watts = IntField(required=True)
+    temp_f = FloatField()

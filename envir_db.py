@@ -11,7 +11,7 @@ import amqplib.client_0_8 as amqp
 
 from envir_settings import *
 from database import db_session
-from models import Usage
+from models import EnvirReading 
 from settings import LOCAL_TIMEZONE
 
 LOGGER = logging.getLogger(__name__)
@@ -66,8 +66,14 @@ class Envir(object):
         try:
             msg = Msg(message.body)
             msg.print_csv(sys.stdout)
-            usage = Usage(timestamp=msg.timestamp.astimezone(pytz.utc), usage_in_watts=msg.total_watts)
-            db_session.add(usage)
+            reading = EnvirReading(receiver_days_since_birth=msg.dsb,
+                                   receiver_time=msg.time24,
+                                   reading_timestamp=message.timestamp,
+                                   ch1_watts=msg.ch1_watts,
+                                   ch2_watts=msg.ch2_watts,
+                                   ch3_watts=msg.ch3_watts,
+                                   temp_f=msg.temp_f)
+            db_session.add(reading)
             db_session.commit()
         except ET.ParseError as e:
             print "Invalid XML, skipping '{}': {}".format(message.body, repr(e))
@@ -77,7 +83,7 @@ class Envir(object):
 class MsgException(Exception):
     pass
 
-class Msg(object):
+class EnvirMsg(object):
 
     def __init__(self, body):
         root = ET.fromstring(body)
