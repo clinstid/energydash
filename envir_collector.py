@@ -36,9 +36,9 @@ class Collector(Thread):
         while not self.exiting:
                 line = ser.readline()
                 if len(line) > 0:
-                    logger.info('Received line: {}'.format(line.rstrip()))
+                    logger.debug('Received line: {}'.format(line.rstrip()))
                     self.work_queue.put((datetime.now(tz=pytz.utc), line.rstrip()))
-                    logger.info('Queued message (size={}).'.format(self.work_queue.qsize()))
+                    logger.debug('Queued message (size={}).'.format(self.work_queue.qsize()))
 
         logger.info('Closing serial port.')
         ser.close()
@@ -68,7 +68,7 @@ class Writer(Thread):
 
             while not self.exiting:
                 (timestamp, line) = self.work_queue.get()
-                logger.info('Received: {}: - {} (size={})'.format(timestamp, 
+                logger.debug('Received: {}: - {} (size={})'.format(timestamp, 
                                                                   line, 
                                                                   self.work_queue.qsize()))
                 msg = EnvirMsg(timestamp, line)
@@ -89,7 +89,7 @@ class Writer(Thread):
 def main():
     logging.basicConfig(format='[%(asctime)s/%(name)s]: %(message)s',
                         level=logging.INFO)
-    logger = logging.getLogger(__name__)
+    logger = logging.getLogger('main')
     if DEBUG:
         logger.setLevel(logging.DEBUG)
 
