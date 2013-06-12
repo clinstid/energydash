@@ -1,0 +1,65 @@
+<!doctype html>
+<html>
+    <head>
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+        <title>energymon layout test</title>
+
+        <link rel="stylesheet" type="text/css" href="../static/css/layout_test.css">
+    </head>
+
+    <body>
+        <div id="page">
+            <div id="header">
+                energymon
+            </div>
+            <div id="latest">
+                <div id="latest_readings">
+                    CURRENT<br/>
+                    1234<br/>
+                    WATTS<br/>
+                    72&#176; F<br/>
+                    12:13PM EDT
+                </div>
+                <div id="latest_chart">
+                    LAST 24 HOURS
+                    <div style="width: 800px; height: 600px;"></div>
+                </div>
+            </div>
+            <div id="charts">
+                <div id="chart_tabs">
+                    <div class="chart_tab" id="7_days">
+                        7<br/>
+                        days
+                    </div>
+                    <div class="chart_tab" id="30_days">
+                        30<br/>
+                        days
+                    </div>
+                    <div class="chart_tab" id="90_days">
+                        90<br/>
+                        days
+                    </div>
+                    <div class="chart_tab" id="1_year">
+                        1<br/>
+                        year
+                    </div>
+                    <div class="chart_tab" id="all_time">
+                        All<br/>
+                        Time
+                    </div>
+                    <div class="chart_tab" id="custom">
+                        Custom
+                    </div>
+                </div>
+                <div id="chart_pane">
+                    <div id="chart">
+                        Chart
+                    </div>
+                    <div id="chart_options">
+                        Chart Options
+                    </div>
+                </div>
+            </div>
+        </div>
+    </body>
+</html>
