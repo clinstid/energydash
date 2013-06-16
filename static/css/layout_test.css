@@ -2,7 +2,7 @@ div#header {
     width: 1000px;
     border-bottom: 1px solid gray;
     clear: both;
-    margin-bottom: 1em;
+    margin: 1em;
     text-align: center;
 }
 
@@ -10,6 +10,7 @@ div#latest {
     float: left;
     width: 1010px;
     clear: both;
+    margin: 1em;
 }
 
 div#latest_readings {
@@ -27,7 +28,7 @@ div#latest_chart {
 div#charts {
     float: left;
     clear: both;
-    margin: 0.1em;
+    margin: 1em;
     width: 1000px;
 }
 

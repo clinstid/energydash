@@ -72,15 +72,19 @@ class Writer(Thread):
                                                                   line, 
                                                                   self.work_queue.qsize()))
                 msg = EnvirMsg(timestamp, line)
+                    reading = EnvirReading(reading_timestamp=msg.reading_timestamp,
+                                           receiver_days_since_birth=msg.dsb,
+                                           receiver_time=msg.time24,
+                                           ch1_watts=msg.ch1_watts,
+                                           ch2_watts=msg.ch2_watts,
+                                           ch3_watts=msg.ch3_watts,
+                                           total_watts=msg.total_watts,
+                                           temp_f=msg.temp_f)
+                    logger.info('{} watts, {} F', reading.total_watts, reading.temp_f)
+                    if reading.total_watts == 0:
+                        continue
                 try:
-                    EnvirReading(reading_timestamp=msg.reading_timestamp,
-                                 receiver_days_since_birth=msg.dsb,
-                                 receiver_time=msg.time24,
-                                 ch1_watts=msg.ch1_watts,
-                                 ch2_watts=msg.ch2_watts,
-                                 ch3_watts=msg.ch3_watts,
-                                 total_watts=msg.total_watts,
-                                 temp_f=msg.temp_f).save()
+                    reading.save()
                 except Exception as e:
                     logger.error('Unhandled exception from db save: {}'.format(e))
 

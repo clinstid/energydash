@@ -1,7 +1,7 @@
 from datetime import datetime, timedelta
 import pytz
 
-epoch = datetime.fromtimestamp(0, tzinfo=pytz.utc)
+epoch = datetime(year=1970, month=1, day=1, tzinfo=pytz.utc)
 
 def seconds_to_dt(seconds):
     return (epoch + timedelta(seconds=seconds))

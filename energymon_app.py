@@ -1,60 +1,41 @@
 #!/usr/bin/env python
 from flask import Flask, render_template
-from flask.ext.sqlalchemy import SQLAlchemy
 from datetime import datetime, timedelta
 import pytz
-import redis
 from dateutil.relativedelta import relativedelta
 import json
+from mongoengine import *
 
 from utc_conversion import *
-from database import db_session
-from models import Usage
+from models import *
 from settings import *
-import settings
 
 app = Flask(__name__)
-app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///{}'.format(SQLITE_DATABASE_PATH)
-db = SQLAlchemy(app)
+
+def get_last_entry():
+    connect(host=MONGO_HOST,
+            db=MONGO_DATABASE_NAME)
+    return EnvirReading.objects.order_by('-reading_timestamp').first()
 
 @app.route('/')
 def start_app():
+    last_entry = get_last_entry()
+    return render_template('index.html',
+                           date=last_entry.reading_timestamp,
+                           usage=last_entry.total_watts,
+                           temp_f=last_entry.temp_f)
 
-    r = redis.StrictRedis(REDIS_HOST_NAME)
-    count = r.zcard(REDIS_SET_NAME)
-
-    now = datetime.now(tz=pytz.utc)
-    end = dt_to_seconds(now)
-    start = dt_to_seconds(now + relativedelta(days=-7))
-    keys = r.zrangebyscore(REDIS_SET_NAME, start, end)
-    pipe = r.pipeline()
-    for key in keys:
-        pipe.hget(REDIS_HASH_NAME, key)
-
-    values = pipe.execute()
-
-    print 'keys[{}], values[{}]'.format(len(keys), len(values))
-
-    # google chart data_table
-    #data_table = {'cols': [{'id': 'minute', 'label': 'Minute', 'type': 'string'},
-    #                       {'id': 'watts', 'label': 'Watts', 'type': 'number'}],
-    #              'rows': [] }
-    #for i in range(min(len(keys), len(values))):
-    #    data_table['rows'].append({'c': [{'v': str(seconds_to_dt(keys[i]))},
-    #                                     {'v': int(values[i])}]})
-
-    # jquery flot data_table
-    data_table = []
-    for i in range(min(len(keys), len(values))):
-        data_table.append([int(keys[i])*1000, int(values[i])])
-
-    return render_template('charts.html',
-                           usage_data=data_table,
-                           num_entries=len(keys))
+@app.route('/current_state')
+def fetch_current_state():
+    last_entry = get_last_entry()
+    return render_template('current_state.html',
+                           date=last_entry.reading_timestamp,
+                           usage=last_entry.total_watts,
+                           temp_f=last_entry.temp_f)
 
 @app.teardown_request
 def shutdown_session(exception=None):
-    db_session.remove()
+    pass
 
 if __name__ == '__main__':
     app.run(host='0.0.0.0', debug=True)
