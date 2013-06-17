@@ -1,0 +1,34 @@
+{% extends "layout.html" %}
+{% block head %}
+    {{ super() }}
+    <link rel="stylesheet" href="static/css/style.css" type="text/css" media="screen, projection" />
+{% endblock %}
+
+{% block body %}
+    <div id="wrapper">
+        <div id="header">
+            energymon 1.0
+        </div><!-- #header-->
+
+        <div id="middle">
+
+            <div id="container">
+                <div id="content">
+                    CHART
+                </div><!-- #content-->
+            </div><!-- #container-->
+
+            <div class="sidebar" id="sideLeft">
+                SELECTOR
+            </div><!-- .sidebar#sideLeft -->
+
+        </div><!-- #middle-->
+
+    </div><!-- #wrapper -->
+
+    {% include 'footer.html' %}
+
+    <script src="static/js/jquery.js"></script>
+    <script src="static/js/update_stats.js"></script>
+    <script src="static/js/main.js"></script>
+{% endblock %} <!-- body -->

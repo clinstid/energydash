@@ -28,10 +28,11 @@ def start_app():
 @app.route('/current_state')
 def fetch_current_state():
     last_entry = get_last_entry()
-    return render_template('current_state.html',
-                           date=last_entry.reading_timestamp,
-                           usage=last_entry.total_watts,
-                           temp_f=last_entry.temp_f)
+    return json.dumps({
+                       'date': str(last_entry.reading_timestamp),
+                       'usage': last_entry.total_watts,
+                       'temp_f': last_entry.temp_f
+                      })
 
 @app.teardown_request
 def shutdown_session(exception=None):
