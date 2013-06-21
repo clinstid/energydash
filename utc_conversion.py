@@ -7,6 +7,6 @@ def seconds_to_dt(seconds):
     return (epoch + timedelta(seconds=seconds))
 
 def dt_to_seconds(utc_dt):
-    return ((utc_dt - epoch).total_seconds())
-
-
+    if not utc_dt.tzinfo:
+        utc_dt = pytz.utc.localize(utc_dt)
+    return int(round(((utc_dt - epoch).total_seconds())))

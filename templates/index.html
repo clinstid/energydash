@@ -5,30 +5,30 @@
 {% endblock %}
 
 {% block body %}
-    <div id="wrapper">
         <div id="header">
             energymon 1.0
         </div><!-- #header-->
+        <div id="header_spacer">
+        </div>
 
-        <div id="middle">
+        <div id="current">
+            <div id="current_text">
+                CURRENT<br />
+                <span id="usage">{{ usage }}</span><br />
+                WATTS<br />
+                <span id="temp_f">{{ temp_f }}</span>&#176; F <br />
+                <span id="date">{{ date }}</span> 
+            </div>
+            <div id="current_chart">
+            </div>
+        </div>
 
-            <div id="container">
-                <div id="content">
-                    CHART
-                </div><!-- #content-->
-            </div><!-- #container-->
-
-            <div class="sidebar" id="sideLeft">
-                SELECTOR
-            </div><!-- .sidebar#sideLeft -->
-
-        </div><!-- #middle-->
-
-    </div><!-- #wrapper -->
-
-    {% include 'footer.html' %}
+        <div id="content">
+        </div><!-- #content-->
 
     <script src="static/js/jquery.js"></script>
+    <script src="static/js/flot/jquery.flot.js"></script>
+    <script src="static/js/flot/jquery.flot.time.js"></script>
     <script src="static/js/update_stats.js"></script>
     <script src="static/js/main.js"></script>
 {% endblock %} <!-- body -->
