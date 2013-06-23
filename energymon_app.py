@@ -13,6 +13,12 @@ from settings import *
 
 app = Flask(__name__)
 
+def local_str_from_naive_utc_dt(naive_utc_dt):
+    local_tz = pytz.timezone(LOCAL_TIMEZONE)
+    local_time = pytz.utc.localize(naive_utc_dt).astimezone(local_tz)
+    return local_time.strftime("%a %b %d %H:%M %Z")
+
+
 def get_last_entry():
     connect(host=MONGO_HOST,
             db=MONGO_DATABASE_NAME)
@@ -24,13 +30,16 @@ def get_last_hour():
     connect(host=MONGO_HOST,
             db=MONGO_DATABASE_NAME)
     query = EnvirReading.objects(reading_timestamp__gte=one_hour_ago)
-    return map(lambda reading: [dt_to_seconds(reading.reading_timestamp), reading.total_watts], query) 
+    return map(lambda reading: [int(dt_to_seconds(reading.reading_timestamp))*1000, 
+                                reading.total_watts], 
+               query) 
 
 @app.route('/')
 def start_app():
     last_entry = get_last_entry()
     return render_template('index.html',
-                           date=last_entry.reading_timestamp,
+                           local_timezone=LOCAL_TIMEZONE,
+                           date=local_str_from_naive_utc_dt(last_entry.reading_timestamp),
                            usage=last_entry.total_watts,
                            temp_f=last_entry.temp_f)
 
@@ -38,7 +47,9 @@ def start_app():
 def fetch_current_chart():
     last_hour = get_last_hour()
     logger = logging.getLogger('current_chart')
-    logger.info('{} entries from the last hour: {} --> {}.'.format(len(last_hour), seconds_to_dt(last_hour[0][0]), seconds_to_dt(last_hour[-1][0])))
+    logger.info('{} entries from the last hour: {} --> {}.'.format(len(last_hour), 
+                                                                   last_hour[0][0], 
+                                                                   last_hour[-1][0]))
     logger.debug(last_hour)
     return json.dumps(last_hour)
 
@@ -46,7 +57,7 @@ def fetch_current_chart():
 def fetch_current_state():
     last_entry = get_last_entry()
     return json.dumps({
-                       'date': str(last_entry.reading_timestamp),
+                       'date': local_str_from_naive_utc_dt(last_entry.reading_timestamp),
                        'usage': last_entry.total_watts,
                        'temp_f': last_entry.temp_f
                       })

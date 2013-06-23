@@ -1,35 +1,19 @@
 body
 {
-    background: black;
+    background: rgb(248, 248, 248);
+    font-family: sans-serif;
 }
 
 div#header
 {
+    width: 100%;
+    height: 2em;
     font-family: sans-serif;
     font-size: 1em;
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    background: black;
-    color: #33b5e5;
-    height: 1.3em;
+    color: black;
     clear: both;
     text-align: center;
-}
-
-div#header_spacer
-{
-    height: 20px;
-    width: 100%;
-    clear: both;
-}
-
-div#content
-{
-    width: 100%;
-    clear: both;
-    background: white;
+    border-bottom: 1px solid rgb(235, 235, 235);
 }
 
 div#current
@@ -37,36 +21,99 @@ div#current
     position: relative;
     width: 100%;
     height: 200px;
-    background: black;
-    color: #33b5e5;
-    border-bottom: 1px solid #33b5e5;
-    border-top: 1px solid #33b5e5;
-    padding: 1px;
+    color: black;
+    margin-top: 0.5em;
+    border-bottom: 1px solid rgb(235, 235, 235);
 }
 
-div#current_text
+div#current_text_title
 {
-    font-family: monospace;
-    font-size: 2em;
+    margin-top: 0.5em;
+    text-align: center;
+    width: 100%;
+    clear: both;
+}
+
+div#current_text_container
+{
     text-align: center;
     float: left;
     width: 24%;
     height: 160px;
-    /* border-right: 1px solid #33b5e5;*/
+    border-right: 1px solid rgb(235, 235, 235);
+    color: gray;
+}
+
+div#current_text
+{
+    margin-top: 0.5em;
+    font-family: Droid Sans Mono, Andale Mono, monospace;
+    font-size: 2em;
+    color: rgb(90, 90, 90);
+}
+
+div#current_chart_container
+{
+    float: right;
+    width: 74%;
+    height: 90%;
+    color: black;
+}
+
+div#current_chart_title
+{
+    margin-top: 0.5em;
+    text-align: center;
+    width: 100%;
+    height: 10%;
+    color: gray;
 }
 
 div#current_chart
 {
-    float: right;
-    width: 74%;
-    height: 100%;
+    width: 100%;
+    height: 90%;
+    color: black;
+}
+
+div#content
+{
+    width: 100%;
+    clear: both;
+    margin-top: 0.2em;
+}
+
+div#tabs
+{
+    width: 100%;
+    height: 1.5em;
+    border-bottom: 1px solid rgb(235, 235, 235);
+    padding: 0 0 0 0.2em;
+    clear: both;
+}
+
+div.tab, div.tab_selected
+{
+    clear: none;
+    font-family: sans-serif;
+    font-weight: normal;
+    font-size: 1em;
+    float: left;
+    width: 33%;
+    color: black;
     text-align: center;
-    color: #33b5e5;
+    margin: 0 auto;
+}
+
+div.tab_selected
+{
+    font-weight: bold;
+    border-bottom: 2px solid black;
 }
 
 .flot-tick-label
 {
-    color: #33b5e5;
+    color: black;
 }
 
 div#footer
@@ -76,7 +123,7 @@ div#footer
     height: 50px;
     bottom: 0;
     left: 0;
-    background: black;
-    color: #33b5e5;
+    color: black;
     text-align: center;
 }
+

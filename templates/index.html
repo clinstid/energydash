@@ -1,34 +1,53 @@
 {% extends "layout.html" %}
 {% block head %}
-    {{ super() }}
-    <link rel="stylesheet" href="static/css/style.css" type="text/css" media="screen, projection" />
+{{ super() }}
+<link rel="stylesheet" href="static/css/style.css" type="text/css" media="screen, projection" />
 {% endblock %}
 
 {% block body %}
-        <div id="header">
-            energymon 1.0
-        </div><!-- #header-->
-        <div id="header_spacer">
+<div id="header">
+    <img alt="energymon" src="{{ url_for('static', filename='images/energymon_logo.png') }}" style="height: 2em;" />
+</div><!-- #header-->
+
+<div id="current">
+    <div id="current_text_container">
+        <div id="current_text_title">
+            <strong>Last Reading</strong><br />
+            <span id="date">{{ date }}</span> 
         </div>
-
-        <div id="current">
-            <div id="current_text">
-                CURRENT<br />
-                <span id="usage">{{ usage }}</span><br />
-                WATTS<br />
-                <span id="temp_f">{{ temp_f }}</span>&#176; F <br />
-                <span id="date">{{ date }}</span> 
-            </div>
-            <div id="current_chart">
-            </div>
+        <div id="current_text">
+            <span id="usage">{{ usage }}</span> watts<br />
+            <span id="temp_f">{{ temp_f }}</span>&#176; F <br />
+        </div> <!-- #current_text -->
+    </div> <!-- #current_text_container -->
+    <div id="current_chart_container">
+        <div id="current_chart_title">
+            <strong>Last Hour</strong>
         </div>
+        <div id="current_chart">
+            <!-- This is filled by javascript -->
+        </div> <!-- #current_chart -->
+    </div><!-- #current_chart_container -->
+</div><!-- #current -->
 
-        <div id="content">
-        </div><!-- #content-->
+<div id="content">
+    <div id="tabs">
+        <div class="tab_selected" id="total_usage_stats">Total Usage</div>
+        <div class="tab" id="daily_usage_stats">Daily Usage</div>
+        <div class="tab" id="monthly_usage_stats">Monthly Usage</div>
+    </div> <!-- #tabs -->
+</div><!-- #content-->
 
-    <script src="static/js/jquery.js"></script>
-    <script src="static/js/flot/jquery.flot.js"></script>
-    <script src="static/js/flot/jquery.flot.time.js"></script>
-    <script src="static/js/update_stats.js"></script>
-    <script src="static/js/main.js"></script>
+<script src="{{ url_for('static', filename='js/jquery.js') }}"></script>
+<!--[if lte IE 8]><script language="javascript" type="text/javascript" src="{{ url_for('static', filename='js/excanvas.min.js') }}"></script><![endif]-->
+<script src="{{ url_for('static', filename='js/timezone-js/date.js') }}"></script>
+<script src="{{ url_for('static', filename='js/flot/jquery.flot.js') }}"></script>
+<script src="{{ url_for('static', filename='js/flot/jquery.flot.time.js') }}"></script>
+
+<script type="text/javascript">
+    var local_timezone = "{{ local_timezone }}";
+</script>
+
+<script src="{{ url_for('static', filename='js/update_stats.js') }}"></script>
+<script src="{{ url_for('static', filename='js/main.js') }}"></script>
 {% endblock %} <!-- body -->
