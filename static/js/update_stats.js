@@ -41,12 +41,12 @@ function handle_current_chart(data)
 
 function update_current_chart()
 {
-    $.get("/current_chart", handle_current_chart);
+    $.get("/energymon/current_chart", handle_current_chart);
 }
 
 function update_current_stats()
 {
-    $.get("/current_state", handle_current_state);
+    $.get("/energymon/current_state", handle_current_state);
     update_current_chart()
 }
 
