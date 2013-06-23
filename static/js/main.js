@@ -35,7 +35,7 @@ $().ready(function() {
     var interval_id = window.setInterval(update_current_stats, 30000);
 
     // Initialize timezone-js
-    timezoneJS.timezone.zoneFileBasePath = "static/tz";
+    timezoneJS.timezone.zoneFileBasePath = "energymon/static/tz";
     timezoneJS.timezone.init();
 
     // Update current stats and chart to get things rolling.
