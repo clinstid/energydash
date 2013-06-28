@@ -16,7 +16,7 @@ app = Flask(__name__)
 def local_str_from_naive_utc_dt(naive_utc_dt):
     local_tz = pytz.timezone(LOCAL_TIMEZONE)
     local_time = pytz.utc.localize(naive_utc_dt).astimezone(local_tz)
-    return local_time.strftime("%a %b %d %H:%M %Z")
+    return local_time.strftime("%a %b %d %H:%M.%S %Z")
 
 
 def get_last_entry():
