@@ -4,17 +4,28 @@ function tab_select() {
         return;
     }
 
+    tab_in(this);
+    tab_out(this);
+
     $(".tab_selected").removeClass("tab_selected").addClass("tab");
     $(this).removeClass("tab").addClass("tab_selected");
 };
 
 function tab_in() {
-    $(this).css("border-bottom", "solid 1px rgb(20, 76, 97)");
+    if ($(this).hasClass("tab_selected"))
+    {
+        return;
+    }
+
     $(this).css("cursor", "pointer");
 };
 
 function tab_out() {
-    $(this).css("border-bottom", "");
+    if ($(this).hasClass("tab_selected"))
+    {
+        return;
+    }
+
     $(this).css("cursor", "auto");
 };
 

@@ -6,24 +6,29 @@
 
 {% block body %}
 <div id="header">
-    <img alt="energymon" src="{{ url_for('static', filename='images/energymon_logo.png') }}" style="height: 2em;" />
+    <img alt="energymon" src="{{ url_for('static', filename='images/energymon_logo.png') }}" style="height: 3em;" />
 </div><!-- #header-->
 
 <div id="current">
-    <div id="current_text_container">
-        <div id="current_text_title">
-            <strong>Last Reading</strong><br />
-            <span id="date">{{ date }}</span> 
+    <div id="current_header">
+        <div id="current_header_reading">
+            Last Reading
         </div>
+        <div id="current_header_chart">
+            Last Hour
+        </div>
+    </div> <!-- #current_header -->
+
+    <div id="current_text_container">
         <div id="current_text">
             <span id="usage">{{ usage }}</span> watts<br />
             <span id="temp_f">{{ temp_f }}</span>&#176; F <br />
         </div> <!-- #current_text -->
+        <div id="current_text_title">
+            <p><span id="date">{{ date }}</span></p>
+        </div>
     </div> <!-- #current_text_container -->
     <div id="current_chart_container">
-        <div id="current_chart_title">
-            <strong>Last Hour</strong>
-        </div>
         <div id="current_chart">
             <!-- This is filled by javascript -->
         </div> <!-- #current_chart -->
@@ -34,8 +39,19 @@
     <div id="tabs">
         <div class="tab_selected" id="total_usage_stats">Total Usage</div>
         <div class="tab" id="daily_usage_stats">Daily Usage</div>
-        <div class="tab" id="monthly_usage_stats">Monthly Usage</div>
+        <div class="tab tab_last" id="monthly_usage_stats">Monthly Usage</div>
     </div> <!-- #tabs -->
+    <div id="content_body">
+        <div id="total_usage">
+            <p>total_usage</p>
+        </div>
+        <div id="daily_usage">
+            <p>daily_usage</p>
+        </div>
+        <div id="monthly_usage">
+            <p>monthly_usage</p>
+        </div>
+    </div> <!-- #content_body -->
 </div><!-- #content-->
 
 <script src="{{ url_for('static', filename='js/jquery.js') }}"></script>
