@@ -153,7 +153,8 @@ div.tab_last
 div.tab
 {
     border-bottom: 1px solid white;
-    background: rgb(199, 199, 199);
+    background: rgb(230, 230, 230);
+    color: gray;
 }
 
 div.tab_selected
@@ -161,7 +162,7 @@ div.tab_selected
     font-weight: bold;
     padding-bottom: 0;
     border-bottom: 0;
-    background: rgb(240, 240, 240);
+    background: #a1d2e4;
 }
 
 .flot-tick-label
@@ -191,7 +192,7 @@ div#content_body
     border-bottom-right-radius: 10px;
 }
 
-div#total_usage, div#daily_usage, div#monthly_usage
+div#total_usage_div, div#daily_usage_div, div#monthly_usage_div
 {
     width: 100%;
     height: 100%;
@@ -200,17 +201,17 @@ div#total_usage, div#daily_usage, div#monthly_usage
     left: 0;
 }
 
-div#total_usage
+div#total_usage_div
 {
     display: block;
 }
 
-div#daily_usage
+div#daily_usage_div
 {
     display: none;
 }
 
-div#monthly_usage
+div#monthly_usage_div
 {
     display: none;
 }
