@@ -55,7 +55,10 @@
     <filter
        id="filter3813"
        style="color-interpolation-filters:sRGB;"
-       inkscape:label="Drop Shadow">
+       inkscape:label="Fuzzy Glow"
+       inkscape:menu="Shadows and Glows"
+       inkscape:menu-tooltip="Overlays a semi-transparent shifted copy to a blurred one"
+       color-interpolation-filters="sRGB">
       <feFlood
          id="feFlood3815"
          flood-opacity="0.5"
@@ -82,7 +85,33 @@
          in2="offset"
          in="SourceGraphic"
          operator="over"
-         result="composite2" />
+         result="fbSourceGraphic" />
+      <feColorMatrix
+         result="fbSourceGraphicAlpha"
+         in="fbSourceGraphic"
+         values="0 0 0 -1 0 0 0 0 -1 0 0 0 0 -1 0 0 0 0 1 0"
+         id="feColorMatrix3017" />
+      <feOffset
+         id="feOffset3019"
+         dx="4"
+         dy="4"
+         result="result11"
+         in="fbSourceGraphic" />
+      <feGaussianBlur
+         id="feGaussianBlur3021"
+         stdDeviation="4"
+         result="result8" />
+      <feComposite
+         id="feComposite3023"
+         in2="result8"
+         result="result9"
+         in="fbSourceGraphic"
+         operator="in" />
+      <feBlend
+         id="feBlend3025"
+         in2="result8"
+         in="result9"
+         mode="darken" />
     </filter>
   </defs>
   <sodipodi:namedview
@@ -98,11 +127,11 @@
      inkscape:document-units="px"
      inkscape:current-layer="layer1"
      showgrid="false"
-     inkscape:window-width="1362"
-     inkscape:window-height="823"
-     inkscape:window-x="126"
-     inkscape:window-y="206"
-     inkscape:window-maximized="0" />
+     inkscape:window-width="1920"
+     inkscape:window-height="1037"
+     inkscape:window-x="1600"
+     inkscape:window-y="25"
+     inkscape:window-maximized="1" />
   <metadata
      id="metadata7">
     <rdf:RDF>
@@ -137,5 +166,5 @@
            x="95.714287"
            y="582.36218" /></flowRegion><flowPara
          id="flowPara3019"
-         style="font-size:72px;font-style:italic;font-variant:normal;font-weight:normal;font-stretch:normal;fill:#0033b5;fill-opacity:0.89803922;font-family:DejaVu Serif;-inkscape-font-specification:DejaVu Serif Italic">energ  mon</flowPara></flowRoot>  </g>
+         style="font-size:72px;font-style:italic;font-variant:normal;font-weight:normal;font-stretch:normal;fill:#333333;fill-opacity:0.89803922000000003;font-family:DejaVu Serif;-inkscape-font-specification:DejaVu Serif Italic">energ  mon</flowPara></flowRoot>  </g>
 </svg>
