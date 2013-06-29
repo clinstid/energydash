@@ -71,7 +71,11 @@ class Writer(Thread):
                 logger.debug('Received: {}: - {} (size={})'.format(timestamp, 
                                                                   line, 
                                                                   self.work_queue.qsize()))
-                msg = EnvirMsg(timestamp, line)
+                try:
+                    msg = EnvirMsg(timestamp, line)
+                except Exception as e:
+                    logger.error('Unhandled exception while building EnvirMsg: {}'.format(e))
+
                 reading = EnvirReading(reading_timestamp=msg.reading_timestamp,
                                        receiver_days_since_birth=msg.dsb,
                                        receiver_time=msg.time24,
