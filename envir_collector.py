@@ -75,6 +75,8 @@ class Writer(Thread):
                     msg = EnvirMsg(timestamp, line)
                 except Exception as e:
                     logger.error('Unhandled exception while building EnvirMsg: {}'.format(e))
+                    logger.error('  Line was: {}'.format(line.rstrip()))
+                    continue
 
                 reading = EnvirReading(reading_timestamp=msg.reading_timestamp,
                                        receiver_days_since_birth=msg.dsb,
