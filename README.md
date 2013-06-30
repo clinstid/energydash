@@ -90,4 +90,11 @@ The `energymon_app.py` module is a Flask-based web application. It pulls data fr
 * **Current**: The top section shows the most recent reading on the left and a line graph of readings for the last 24 hours on the right.
 * **Stats/Charts**: The bottom, larger section presents tabs that have stats and charts for different time frames. *Still working on this.* :)
 
+## TODO ##
+[ ] New daemon for reading per-6-second documents and storing documents for:
+    [ ] Averages for minutes, hours, days. 
+    [ ] Averages for each hour (0-23) of the day, day of the week, month of the year.
+    [ ] Averages for each hour of each day of the week.
+[ ] Convert to using pymongo, mongoengine's ORM doesn't seem to be worth it for this type of data model. Should be able to generate document from `EnvirMsg` object.
+
 
