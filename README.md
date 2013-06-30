@@ -31,6 +31,10 @@ There were a few that existed that had relatively advanced software for drawing 
                                     +--------------------+
 ```
 
+## Screenshot ##
+
+![alt text](https://github.com/clinstid/energymon/energymon_screenshot_2013-06-30.png "Logo Title Text 1")
+
 ## Hardware ##
 The basic building blocks for the hardware that provides data for energymon are a transmitter and receiver pair called an <a href="http://www.currentcost.net/Monitor%20Details.html">Envi kit</a>. The kit includes two clamps that go around the main power lines that come into the breaker box, a transmitter that the clamps plug into, and a receiver that pairs with the transmitter and displays power usage information.
 
@@ -106,10 +110,6 @@ Example:
 The `energymon_app.py` module is a Flask-based web application. It pulls data from MongoDB and displays two main sections in the application:
 
 * **Current**: The top section shows the most recent reading on the left and a line graph of readings for the last 24 hours on the right.
-* **Stats/Charts**: The bottom, larger section presents tabs that have stats and charts for different time frames. 
-
-## Configuration ##
-
-### settings.py ###
+* **Stats/Charts**: The bottom, larger section presents tabs that have stats and charts for different time frames. *Still working on this.* :)
 
 
