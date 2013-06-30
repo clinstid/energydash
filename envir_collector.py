@@ -8,6 +8,7 @@ import pytz
 from mongoengine import *
 from Queue import Queue
 from time import sleep
+import xml.etree.ElementTree as ET
 
 from settings import *
 from envir_db import EnvirMsg
