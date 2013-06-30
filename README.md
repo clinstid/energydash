@@ -33,7 +33,7 @@ There were a few that existed that had relatively advanced software for drawing 
 
 ## Screenshot ##
 
-![alt text](https://github.com/clinstid/energymon/energymon_screenshot_2013-06-30.png "Logo Title Text 1")
+![alt text](https://github.com/clinstid/energymon/raw/master/energymon_screenshot_2013-06-30.png "Logo Title Text 1")
 
 ## Hardware ##
 The basic building blocks for the hardware that provides data for energymon are a transmitter and receiver pair called an <a href="http://www.currentcost.net/Monitor%20Details.html">Envi kit</a>. The kit includes two clamps that go around the main power lines that come into the breaker box, a transmitter that the clamps plug into, and a receiver that pairs with the transmitter and displays power usage information.
