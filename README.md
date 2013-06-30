@@ -12,10 +12,13 @@ In addition to displaying information, the receiver also has an RJ-45 serial por
 
 The XML messages look like this:
 
+```xml
     <msg><src>CC128-v0.15</src><dsb>00013</dsb><time>00:10:07</time><tmprF>68.7</tmprF><sensor>0</sensor><id>00077</id><type>1</type><ch1><watts>00006</watts></ch1><ch2><watts>00269</watts></ch2><ch3><watts>00328</watts></ch3></msg>
+```
 
 In a more readable format:
 
+```xml
     <msg>
         <src>CC128-v0.15</src>
         <dsb>00013</dsb>
@@ -34,6 +37,7 @@ In a more readable format:
             <watts>00328</watts>
         </ch3>
     </msg>
+```
 
 * **src**: The firmware version running on the receiver.
 * **dsb**: Days since birth - If you know when you started, you can backtrack from this value to figure out the actual day of the reading, but *envir_collector.py* creates a timestamp at the time of reading. That takes care of two problems. The first is that at least my receiver seems to lose time, so as long as the system running *envir_collector.py* is using NTP, the time and date should be correct.
@@ -48,8 +52,7 @@ There are also historical messages sent every few hours that include reading his
 
 ## Software Components ##
 
-### envir_collector.py ###
-
+### Data Collection ###
 The `envir_collector.py` app is a multi-threaded process with the following threads: 
 
 * **Collector**: Listens on the USB/serial line for transmissions from the receiver. Each line is added to a `Queue` to be processed.
@@ -73,12 +76,11 @@ Example:
     }
 ```
 
-### energymon_app.py ###
+### Web App ###
+The `energymon_app.py` module is a Flask-based web application. It pulls data from MongoDB and displays two main sections in the application:
 
-The `energymon_app.py` module is a Flask-based web application that comprises our (basically) one page web app.
-
-### envir_db.py ###
-
+* **Current**: The top section shows the most recent reading on the left and a line graph of readings for the last 24 hours on the right.
+* **Stats/Charts**: The bottom, larger section presents tabs that have stats and charts for different time frames. 
 
 ## Configuration ##
 
