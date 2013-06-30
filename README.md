@@ -7,33 +7,11 @@ There were a few that existed that had relatively advanced software for drawing 
 
 ## High Level Design ##
 
-```
-                                           HTTP/WSGI
-                                               |
-                                               v
-     +------------+                    +------------------+
-     | Main Power |                    | energymon_app.py |
-     +------------+                    +------------------+
-        1  2  3                                |
-        |  |  |                                |
-        v  v  v                                |
-    +-------------+                            v
-    | transmitter |                       +---------+
-    +-------------+                       | MongoDB |<--------+
-           .                              +---------+         |
-           .                                                  |
-           .                        +--------------------+    |
-           v                        | envir_collector.py |    |
-      +----------+    serial->USB   |                    |    |
-      | receiver |----------------->|*Collector          |    |
-      +----------+                  |                    |    |
-                                    |             Writer*|----+
-                                    +--------------------+
-```
+![alt text](https://github.com/clinstid/energymon/raw/master/high_level_design.png "energymon screenshot")
 
 ## Screenshot ##
 
-![alt text](https://github.com/clinstid/energymon/raw/master/energymon_screenshot_2013-06-30.png "Logo Title Text 1")
+![alt text](https://github.com/clinstid/energymon/raw/master/energymon_screenshot_2013-06-30.png "energymon screenshot")
 
 ## Hardware ##
 The basic building blocks for the hardware that provides data for energymon are a transmitter and receiver pair called an <a href="http://www.currentcost.net/Monitor%20Details.html">Envi kit</a>. The kit includes two clamps that go around the main power lines that come into the breaker box, a transmitter that the clamps plug into, and a receiver that pairs with the transmitter and displays power usage information.
