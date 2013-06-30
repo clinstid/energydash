@@ -53,13 +53,15 @@ class Writer(Thread):
     def run(self):
         logger = logging.getLogger('writer')
         while not self.exiting:
+            logger.info('Connecting to database {}@{}...'.
+                        format(MONGO_DATABASE_NAME,
+                               MONGO_HOST))
             try:
-                logger.info('Connecting to database {}@{}...'.
-                            format(MONGO_DATABASE_NAME,
-                                   MONGO_HOST))
                 connect(host=MONGO_HOST,
                         db=MONGO_DATABASE_NAME)
-
+            except ConnectionError as ce:
+                logger.error('Failed to connect to database: {}'.format(ce))
+                continue
             except Exception as e:
                 logger.error('Unhandled exception from database: {}'.format(e))
                 raise
@@ -73,6 +75,12 @@ class Writer(Thread):
                                                                   self.work_queue.qsize()))
                 try:
                     msg = EnvirMsg(timestamp, line)
+                except ET.ParseError as pe:
+                    logger.error('XML parsing failed: {}'.format(pe))
+                    continue
+                except MsgException as me:
+                    logger.error('EnvirMsg error: {}'.format(me))
+                    continue
                 except Exception as e:
                     logger.error('Unhandled exception while building EnvirMsg: {}'.format(e))
                     logger.error('  Line was: {}'.format(line.rstrip()))
@@ -90,10 +98,14 @@ class Writer(Thread):
                 if reading.total_watts == 0:
                     continue
 
-                try:
-                    reading.save()
-                except Exception as e:
-                    logger.error('Unhandled exception from db save: {}'.format(e))
+                saved = False
+                while not saved:
+                    try:
+                        reading.save()
+                        saved = True
+                    except Exception as e:
+                        logger.error('Unhandled exception from db save: {}'.format(e))
+                        sleep(1)
 
         logger.info('Exiting.')
 

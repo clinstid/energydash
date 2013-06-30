@@ -35,10 +35,8 @@ In a more readable format:
         </ch3>
     </msg>
 
-Most of the message is pretty easy to figure out. 
-
 * **src**: The firmware version running on the receiver.
-* **dsb**: *D*ays *s*ince *b*irth - If you know when you started, you can backtrack from this value to figure out the actual day of the reading, but *envir_collector.py* creates a timestamp at the time of reading. That takes care of two problems. The first is that at least my receiver seems to lose time, so as long as the system running *envir_collector.py* is using NTP, the time and date should be correct.
+* **dsb**: Days since birth - If you know when you started, you can backtrack from this value to figure out the actual day of the reading, but *envir_collector.py* creates a timestamp at the time of reading. That takes care of two problems. The first is that at least my receiver seems to lose time, so as long as the system running *envir_collector.py* is using NTP, the time and date should be correct.
 * **time**: Timestamp according to the receiver.
 * **tmprF**: The temperature in degrees Fahrenheit from a sensor on the receiver.
 * **sensor**: I believe this value is referring to the mains sensors.
@@ -46,15 +44,38 @@ Most of the message is pretty easy to figure out.
 * **type**: Sensor type, 1 is electricity (not sure what other types there are).
 * **ch[1-3]**: The mains sensors, readings are in watts. Mine happens to have 3 although only 2 of mine are in use.
 
-There are also historical messages sent every few hours that include reading history, but I'm ignoring those since I'm storing the real-time readings. That may be an eventual project to be able to fill in gaps in case I missed some real-time data.
+There are also historical messages sent every few hours that include reading history, but I'm ignoring those since I'm storing the real-time readings. It's on my "to do" list to read those as well and store them in the database.
 
 ## Software Components ##
 
 ### envir_collector.py ###
 
+The `envir_collector.py` app is a multi-threaded process with the following threads: 
+
+* **Collector**: Listens on the USB/serial line for transmissions from the receiver. Each line is added to a `Queue` to be processed.
+* **Writer**: Pulls work items from the `Queue`, parses the XML and creates an `EnvirMsg` object from it. From there, it builds an `EnvirReading` object which is a model from `models.py` that maps to an entry in MongoDB and writes it to the database.
+
+This gives us documents in the `envir_reading` collection every 6 seconds as long as the link between the transmitter and receiver are working well.
+
+Example:
+```javascript
+    > db.envir_reading.findOne()
+    {
+            "_id" : ObjectId("51b1456172ea814c7fb8bf09"),
+            "reading_timestamp" : ISODate("2013-06-07T02:28:49.432Z"),
+            "receiver_days_since_birth" : 19,
+            "receiver_time" : "22:22:00",
+            "ch1_watts" : 7,
+            "ch2_watts" : 323,
+            "ch3_watts" : 328,
+            "total_watts" : 658,
+            "temp_f" : 69.2
+    }
+```
+
 ### energymon_app.py ###
 
-### models.py ###
+The `energymon_app.py` module is a Flask-based web application that comprises our (basically) one page web app.
 
 ### envir_db.py ###
 
