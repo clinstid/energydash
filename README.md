@@ -5,6 +5,32 @@ In the winter of 2012, we received an electric bill for over $700. Granted that 
 
 There were a few that existed that had relatively advanced software for drawing charts and calculating stats, but they were pretty expensive, so I thought that maybe I could build something to do what I wanted instead. I had been wanting to learn about web app development for a while, so I decided that I would look into creating my own.
 
+## High Level Design ##
+
+```
+                                           HTTP/WSGI
+                                               |
+                                               v
+     +------------+                    +------------------+
+     | Main Power |                    | energymon_app.py |
+     +------------+                    +------------------+
+        1  2  3                                |
+        |  |  |                                |
+        v  v  v                                |
+    +-------------+                            v
+    | transmitter |                       +---------+
+    +-------------+                       | MongoDB |<--------+
+           .                              +---------+         |
+           .                                                  |
+           .                        +--------------------+    |
+           v                        | envir_collector.py |    |
+      +----------+    serial->USB   |                    |    |
+      | receiver |----------------->|*Collector          |    |
+      +----------+                  |                    |    |
+                                    |             Writer*|----+
+                                    +--------------------+
+```
+
 ## Hardware ##
 The basic building blocks for the hardware that provides data for energymon are a transmitter and receiver pair called an <a href="http://www.currentcost.net/Monitor%20Details.html">Envi kit</a>. The kit includes two clamps that go around the main power lines that come into the breaker box, a transmitter that the clamps plug into, and a receiver that pairs with the transmitter and displays power usage information.
 
@@ -53,7 +79,7 @@ There are also historical messages sent every few hours that include reading his
 ## Software Components ##
 
 ### Data Collection ###
-The `envir_collector.py` app is a multi-threaded process with the following threads: 
+The `envir_collector.py` module is a multi-threaded process with the following threads: 
 
 * **Collector**: Listens on the USB/serial line for transmissions from the receiver. Each line is added to a `Queue` to be processed.
 * **Writer**: Pulls work items from the `Queue`, parses the XML and creates an `EnvirMsg` object from it. From there, it builds an `EnvirReading` object which is a model from `models.py` that maps to an entry in MongoDB and writes it to the database.
