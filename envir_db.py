@@ -1,11 +1,7 @@
 #!/usr/bin/env python
-import sys
-import string
 import xml.etree.ElementTree as ET
 from datetime import datetime, timedelta
 from dateutil.tz import tzlocal
-import pytz
-import logging
 
 from settings import *
 #from database import db_session
