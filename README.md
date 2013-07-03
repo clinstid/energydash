@@ -64,7 +64,7 @@ There are also historical messages sent every few hours that include reading his
 The `envir_collector.py` module is a multi-threaded process with the following threads: 
 
 * **Collector**: Listens on the USB/serial line for transmissions from the receiver. Each line is added to a `Queue` to be processed.
-* **Writer**: Pulls work items from the `Queue`, parses the XML and creates an `EnvirMsg` object from it. From there, it builds an `EnvirReading` object which is a model from `models.py` that maps to an entry in MongoDB and writes it to the database.
+* **Writer**: Pulls work items from the `Queue`, parses the XML and creates an `EnvirMsg` object that generates a document to save in the `envir_reading` collection in the database. 
 
 This gives us documents in the `envir_reading` collection every 6 seconds as long as the link between the transmitter and receiver are working well.
 
@@ -83,6 +83,10 @@ Example:
             "temp_f" : 69.2
     }
 ```
+
+### Stats ###
+*Still working on this...*
+
 
 ### Web App ###
 The `energymon_app.py` module is a Flask-based web application. It pulls data from MongoDB and displays two main sections in the application:
