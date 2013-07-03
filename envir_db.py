@@ -4,8 +4,6 @@ from datetime import datetime, timedelta
 from dateutil.tz import tzlocal
 
 from settings import *
-#from database import db_session
-from models import EnvirReading 
 
 class MsgException(Exception):
     pass
@@ -93,15 +91,17 @@ class EnvirMsg(object):
         time_delta_since_birth = timedelta(days=self.dsb, seconds=seconds, minutes=minutes, hours=hours)
         self.timestamp = EnvirMsg.birth_date + time_delta_since_birth
 
-    def get_db_obj(self):
-        return EnvirReading(reading_timestamp=msg.reading_timestamp,
-                            receiver_days_since_birth=self.dsb,
-                            receiver_time=self.time24,
-                            ch1_watts=self.ch1_watts,
-                            ch2_watts=self.ch2_watts,
-                            ch3_watts=self.ch3_watts,
-                            total_watts=self.total_watts,
-                            temp_f=self.temp_f)
+    def get_db_document(self):
+        return { 
+                'reading_timestamp': self.reading_timestamp,
+                'receiver_days_since_birth': self.dsb,
+                'receiver_time': self.time24,
+                'ch1_watts': self.ch1_watts,
+                'ch2_watts': self.ch2_watts,
+                'ch3_watts': self.ch3_watts,
+                'total_watts': self.total_watts,
+                'temp_f': self.temp_f 
+               }
 
     def print_csv(self, logger):
          logger.info('"{timestamp}",{total_watts}'.format(timestamp=self.reading_timestamp, 
