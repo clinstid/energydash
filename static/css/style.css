@@ -78,7 +78,7 @@ div#current_text_title
 div#current_text
 {
     margin-top: 0.5em;
-    font-family: Droid Sans Mono, Andale Mono, monospace;
+    font-family: Droid Sans Mono, Consolas, Andale Mono, monospace;
     font-size: 2em;
     color: rgb(90, 90, 90);
 }

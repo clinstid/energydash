@@ -1,14 +1,13 @@
 #!/usr/bin/env python
 from serial import *
-import sys
 from threading import Thread
 import logging
 from datetime import datetime
 import pytz
-from mongoengine import *
 from Queue import Queue
 from time import sleep
 import xml.etree.ElementTree as ET
+import pymongo
 
 from settings import *
 from envir_db import EnvirMsg
@@ -50,24 +49,14 @@ class Writer(Thread):
         self.daemon = True
         self.exiting = False
         self.work_queue = work_queue
+        self.client = pymongo.MongoClient(host=MONGO_HOST)
+        self.db = self.client[MONGO_DATABASE_NAME]
+        self.readings = self.db.envir_reading
 
     def run(self):
         logger = logging.getLogger('writer')
         while not self.exiting:
-            logger.info('Connecting to database {}@{}...'.
-                        format(MONGO_DATABASE_NAME,
-                               MONGO_HOST))
-            try:
-                connect(host=MONGO_HOST,
-                        db=MONGO_DATABASE_NAME)
-            except ConnectionError as ce:
-                logger.error('Failed to connect to database: {}'.format(ce))
-                continue
-            except Exception as e:
-                logger.error('Unhandled exception from database: {}'.format(e))
-                raise
-
-            logger.info('Wating for work...')
+            logger.info('Waiting for work...')
 
             while not self.exiting:
                 (timestamp, line) = self.work_queue.get()
@@ -87,22 +76,25 @@ class Writer(Thread):
                     logger.error('  Line was: {}'.format(line.rstrip()))
                     continue
 
-                reading = EnvirReading(reading_timestamp=msg.reading_timestamp,
-                                       receiver_days_since_birth=msg.dsb,
-                                       receiver_time=msg.time24,
-                                       ch1_watts=msg.ch1_watts,
-                                       ch2_watts=msg.ch2_watts,
-                                       ch3_watts=msg.ch3_watts,
-                                       total_watts=msg.total_watts,
-                                       temp_f=msg.temp_f)
-                logger.info('{} watts, {} F'.format(reading.total_watts, reading.temp_f))
+                # Skip 0 readings
                 if reading.total_watts == 0:
                     continue
+
+                reading = { 'reading_timestamp': msg.reading_timestamp,
+                            'receiver_days_since_birth': msg.dsb,
+                            'receiver_time': msg.time24,
+                            'ch1_watts': msg.ch1_watts,
+                            'ch2_watts': msg.ch2_watts,
+                            'ch3_watts': msg.ch3_watts,
+                            'total_watts': msg.total_watts,
+                            'temp_f': msg.temp_f 
+                           };
+                logger.info('{} watts, {} F'.format(reading['total_watts'], reading['temp_f']))
 
                 saved = False
                 while not saved:
                     try:
-                        reading.save()
+                        readings.save(reading)
                         saved = True
                     except Exception as e:
                         logger.error('Unhandled exception from db save: {}'.format(e))

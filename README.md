@@ -95,6 +95,6 @@ The `energymon_app.py` module is a Flask-based web application. It pulls data fr
     * Averages for minutes, hours, days. 
     * Averages for each hour (0-23) of the day, day of the week, month of the year.
     * Averages for each hour of each day of the week.
-* Convert to using pymongo, mongoengine's ORM doesn't seem to be worth it for this type of data model. Should be able to generate document from `EnvirMsg` object.
+* ~~Convert to using pymongo, mongoengine's ORM doesn't seem to be worth it for this type of data model. Should be able to generate document from `EnvirMsg` object.~~
 
 

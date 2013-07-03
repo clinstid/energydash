@@ -9,6 +9,11 @@ function tab_select() {
 
     $(".tab_selected").removeClass("tab_selected").addClass("tab");
     $(this).removeClass("tab").addClass("tab_selected");
+    $("#total_usage_div").css("display", "none");
+    $("#daily_usage_div").css("display", "none");
+    $("#monthly_usage_div").css("display", "none");
+    var div_id = "#" + $(this).attr('id') + "_div";
+    $(div_id).css("display", "block");
 };
 
 function tab_in() {
