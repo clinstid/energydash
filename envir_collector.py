@@ -75,7 +75,7 @@ class Writer(Thread):
                     continue
 
                 # Skip 0 readings
-                if reading.total_watts == 0:
+                if msg.total_watts == 0:
                     continue
 
                 reading = msg.get_db_document()
@@ -84,7 +84,7 @@ class Writer(Thread):
                 saved = False
                 while not saved:
                     try:
-                        readings.save(reading)
+                        self.readings.save(reading)
                         saved = True
                     except Exception as e:
                         logger.error('Unhandled exception from db save: {}'.format(e))
