@@ -36,7 +36,14 @@ function handle_current_chart(data)
                         borderColor: "rgb(235, 235, 235)",
                     },
     };
-    $.plot("#current #current_chart", plot_data, options);
+    window.current_chart_plot = $.plot("#current #current_chart", plot_data, options);
+}
+
+function redraw_chart(chart_plot)
+{
+    chart_plot.resize();
+    chart_plot.setupGrid();
+    chart_plot.draw();
 }
 
 function update_current_chart()

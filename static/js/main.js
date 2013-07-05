@@ -1,3 +1,5 @@
+var current_chart_plot;
+
 function tab_select() {
     if ($(this).hasClass("tab_selected"))
     {
@@ -34,7 +36,19 @@ function tab_out() {
     $(this).css("cursor", "auto");
 };
 
+function window_resize() {
+    // If the window is resized, then we'll need to redraw the current chart.
+    redraw_chart(window.current_chart_plot);
+
+    // TODO Need to also update anything else that we're drawing... when we're
+    // drawing it anyway.
+}
+
 function add_actions() {
+    // Window
+    $(window).resize(window_resize);
+
+    // Tabs
     $(".tab").click(tab_select);
     $(".tab_selected").click(tab_select);
     $(".tab").hover(tab_in, tab_out);
@@ -56,5 +70,4 @@ $().ready(function() {
 
     // Update current stats and chart to get things rolling.
     update_current_stats();
-    update_current_chart();
 });
