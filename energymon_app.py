@@ -53,10 +53,10 @@ def start_app():
     last_entry = get_last_entry()
     return render_template('index.html',
                            local_timezone=LOCAL_TIMEZONE,
-                           date=local_str_from_naive_utc_dt(last_entry['reading_timestamp'],
+                           date=local_str_from_naive_utc_dt(last_entry['timestamp'],
                                                             LOCAL_TIMEZONE),
-                           usage=last_entry['total_watts'],
-                           temp_f=last_entry['temp_f'])
+                           usage=last_entry['usage'],
+                           temp_f=last_entry['tempf'])
 
 @app.route('/current_chart')
 def fetch_current_chart():
