@@ -5,13 +5,17 @@ import pytz
 import json
 import pymongo
 import logging
-import sys
+import urllib
 
 from utc_conversion import *
 from settings import *
 
 app = Flask(__name__)
-client = pymongo.MongoClient(host=MONGO_HOST)
+mongo_uri = 'mongodb://{user}:{password}@{host}/{database}'.format(user=urllib.quote(MONGO_USER),
+                                                                   password=urllib.quote(MONGO_PASSWORD),
+                                                                   host=MONGO_HOST,
+                                                                   database=MONGO_DATABASE_NAME)
+client = pymongo.MongoClient(mongo_uri)
 db = client[MONGO_DATABASE_NAME]
 readings = db.envir_reading
 hours = db.hours

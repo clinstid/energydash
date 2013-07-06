@@ -85,16 +85,87 @@ Example:
 ```
 
 ### Stats ###
-The `energymon_statsd.py` daemon is a python application that uses the documents in the `envir_reading` collection to build collections with coarser granularity so we can build charts with less data points. As you can see in the screenshot, there are charts based on hour-level granularity. 
+The `energymon_statsd.py` daemon is a python application that uses the documents in the `envir_reading` collection to build collections with coarser granularity to build charts with less data points. For exmaple, the first chart below the current readings covers the last 24 hours. For each chart type, the stats are stored in a relevant collection in the database. The stats are updated every 60 seconds and `energymon_statsd.py` keeps track of where it left off by saving a document in the `bookmarks` collection.
 
-For exmaple, the first main chart covers the last 24 hours. So, the first collection built is called `hours` and it contains averages of the 6-second readings from `envir_reading`. This provides a quick MongoDB query to pick up averages over the last 24 hours.
+### Database ###
+As mentioned before, the database used for this app is MongoDB. It has the following collections:
 
-Building on the `hours` collection, there are also `hours_in_day` and `hours_per_dow` that cover averages for each of the 24 hours in any day and averages for each hour for each day of the week, respectively.
-
-The stats are updated every 60 seconds and `energymon_statsd.py` keeps track of where it left off by saving a document in the `bookmarks` collection.
+* **bookmarks**: Stores bookmarks to mark where a reader or writer left off. Mostly used in `energymon_statsd.py` but also used by `envir_collector.py` to store the last document it added to `envir_reading`:
+```
+    { "_id" : "envir_reading", "timestamp" : ISODate("2013-07-06T22:29:11.160Z") }
+    { "_id" : "hours", "timestamp" : ISODate("2013-07-06T22:00:00Z") }
+    { "_id" : "seconds", "usage" : 895, "timestamp" : ISODate("2013-07-06T22:29:53.884Z"), "tempf" : 74.6 }
+```
+* **envir_reading**: Stores a document for every 6-second reading that comes from the EnviR receiver.
+```
+    {
+            "_id" : ObjectId("51b1456172ea814c7fb8bf09"),
+            "reading_timestamp" : ISODate("2013-06-07T02:28:49.432Z"),
+            "receiver_days_since_birth" : 19,
+            "receiver_time" : "22:22:00",
+            "ch1_watts" : 7,
+            "ch2_watts" : 323,
+            "ch3_watts" : 328,
+            "total_watts" : 658,
+            "temp_f" : 69.2
+    }
+```
+* **hours**: Stores hour-granularity averages of the documents in `envir_reading`:
+```
+    {
+            "_id" : ISODate("2013-06-07T02:00:00Z"),
+            "count" : 286,
+            "average_usage" : 624,
+            "average_tempf" : 68.8779720279721,
+            "timestamps" : [
+                    ISODate("2013-06-07T02:28:49.432Z"),
+                    ISODate("2013-06-07T02:28:55.473Z"),
+                    ...
+            ]
+    }
+```
+* **hours_in_day**: Stores documents with averages for each of the 24 hours in all days:
+```
+    {
+            "_id" : "23",
+            "count" : 29,
+            "average_usage" : 842,
+            "average_tempf" : 67.8939769930134,
+            "timestamps" : [
+                    ISODate("2013-06-07T03:00:00Z"),
+                    ISODate("2013-06-08T03:00:00Z"),
+                    ...
+            ],
+            "timezone" : "America/New_York"
+    }
+```
+* **hours_per_dow**: Stores documents with averages for each hour of each day of the week:
+```
+{
+        "_id" : "Wed",
+        "hours" : {
+                "20" : {
+                        "average_usage" : 1270,
+                        "count" : 4,
+                        "average_tempf" : 72.23073396282791,
+                        "timestamps" : [ ]
+                },
+                "21" : {
+                        "average_usage" : 1125,
+                        "count" : 4,
+                        "average_tempf" : 71.1739317983943,
+                        "timestamps" : [ ]
+                },
+                ...
+        },
+        "timezone" : "America/New_York"
+}
+```
 
 ### Web App ###
 The `energymon_app.py` module is a Flask-based web application. It pulls data from MongoDB and displays two main sections in the application:
 
 * **Current**: The top section shows the most recent reading on the left and a line graph of readings for the last 24 hours on the right.
 * **Stats/Charts**: The bottom, larger section presents tabs that have stats and charts for different time frames.
+
+The charts are all rendered using <a href="http://www.flotcharts.org/">jquery/flot</a> which uses the HTML5 canvas. 
