@@ -85,11 +85,16 @@ Example:
 ```
 
 ### Stats ###
-*Still working on this...*
+The `energymon_statsd.py` daemon is a python application that uses the documents in the `envir_reading` collection to build collections with coarser granularity so we can build charts with less data points. As you can see in the screenshot, there are charts based on hour-level granularity. 
 
+For exmaple, the first main chart covers the last 24 hours. So, the first collection built is called `hours` and it contains averages of the 6-second readings from `envir_reading`. This provides a quick MongoDB query to pick up averages over the last 24 hours.
+
+Building on the `hours` collection, there are also `hours_in_day` and `hours_per_dow` that cover averages for each of the 24 hours in any day and averages for each hour for each day of the week, respectively.
+
+The stats are updated every 60 seconds and `energymon_statsd.py` keeps track of where it left off by saving a document in the `bookmarks` collection.
 
 ### Web App ###
 The `energymon_app.py` module is a Flask-based web application. It pulls data from MongoDB and displays two main sections in the application:
 
 * **Current**: The top section shows the most recent reading on the left and a line graph of readings for the last 24 hours on the right.
-* **Stats/Charts**: The bottom, larger section presents tabs that have stats and charts for different time frames. *Still working on this.* :)
+* **Stats/Charts**: The bottom, larger section presents tabs that have stats and charts for different time frames.
