@@ -149,9 +149,10 @@ class Writer(Thread):
         self.daemon = True
         self.exiting = False
         self.work_queue = work_queue
-        self.client = pymongo.MongoClient(host=MONGO_HOST,
-                                          user=MONGO_USER,
-                                          password=MONGO_PASSWORD)
+        mongo_uri = 'mongodb://{user}:{password}@{host}'.format(user=urllib.quote(MONGO_USER),
+                                                                password=urllib.quote(MONGO_PASSWORD),
+                                                                host=MONGO_HOST)
+        self.client = pymong.MongoClient(mongo_uri)
         self.db = self.client[MONGO_DATABASE_NAME]
         self.readings = self.db.envir_reading
         self.bookmarks = self.db.bookmarks
