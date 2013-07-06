@@ -7,7 +7,7 @@ There were a few that existed that had relatively advanced software for drawing 
 
 ## High Level Design ##
 
-![alt text](https://github.com/clinstid/energymon/raw/master/high_level_design.svg "energymon screenshot")
+![alt text](https://github.com/clinstid/energymon/raw/master/high_level_design.png "energymon screenshot")
 
 ## Screenshot ##
 
