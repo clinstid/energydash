@@ -2,3 +2,4 @@
 *.sqlite3
 \.*\.swp
 *.pyc
+mongodb_secret.py

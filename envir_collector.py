@@ -149,7 +149,9 @@ class Writer(Thread):
         self.daemon = True
         self.exiting = False
         self.work_queue = work_queue
-        self.client = pymongo.MongoClient(host=MONGO_HOST)
+        self.client = pymongo.MongoClient(host=MONGO_HOST,
+                                          user=MONGO_USER,
+                                          password=MONGO_PASSWORD)
         self.db = self.client[MONGO_DATABASE_NAME]
         self.readings = self.db.envir_reading
         self.bookmarks = self.db.bookmarks
