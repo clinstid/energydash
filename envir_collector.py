@@ -9,6 +9,7 @@ from time import sleep
 import xml.etree.ElementTree as ET
 import pymongo
 from dateutil.tz import tzlocal
+import urllib
 
 from settings import *
 
@@ -149,10 +150,12 @@ class Writer(Thread):
         self.daemon = True
         self.exiting = False
         self.work_queue = work_queue
-        mongo_uri = 'mongodb://{user}:{password}@{host}'.format(user=urllib.quote(MONGO_USER),
+        mongo_uri = 'mongodb://{user}:{password}@{host}/{database}'.format(user=urllib.quote(MONGO_USER),
                                                                 password=urllib.quote(MONGO_PASSWORD),
-                                                                host=MONGO_HOST)
-        self.client = pymong.MongoClient(mongo_uri)
+                                                                host=MONGO_HOST,
+                                                                           database=MONGO_DATABASE_NAME)
+
+        self.client = pymongo.MongoClient(mongo_uri)
         self.db = self.client[MONGO_DATABASE_NAME]
         self.readings = self.db.envir_reading
         self.bookmarks = self.db.bookmarks
