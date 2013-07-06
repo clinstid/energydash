@@ -152,6 +152,7 @@ class Writer(Thread):
         self.client = pymongo.MongoClient(host=MONGO_HOST)
         self.db = self.client[MONGO_DATABASE_NAME]
         self.readings = self.db.envir_reading
+        self.bookmarks = self.db.bookmarks
 
     def run(self):
         logger = logging.getLogger('writer')
