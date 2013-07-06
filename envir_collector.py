@@ -151,8 +151,8 @@ class Writer(Thread):
         self.exiting = False
         self.work_queue = work_queue
         mongo_uri = 'mongodb://{user}:{password}@{host}/{database}'.format(user=urllib.quote(MONGO_USER),
-                                                                password=urllib.quote(MONGO_PASSWORD),
-                                                                host=MONGO_HOST,
+                                                                           password=urllib.quote(MONGO_PASSWORD),
+                                                                           host=MONGO_HOST,
                                                                            database=MONGO_DATABASE_NAME)
 
         self.client = pymongo.MongoClient(mongo_uri)

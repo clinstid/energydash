@@ -4,6 +4,7 @@ import logging
 from time import sleep
 from datetime import datetime, timedelta
 import pytz
+import urllib
 
 from settings import *
 from utc_conversion import *
@@ -20,7 +21,11 @@ def update_average(old_average, old_count, new_value):
 class Stats(object):
     def __init__(self):
         self.stopping = False
-        self.client = pymongo.MongoClient(host=MONGO_HOST)
+        mongo_uri = 'mongodb://{user}:{password}@{host}/{database}'.format(user=urllib.quote(MONGO_USER),
+                                                                           password=urllib.quote(MONGO_PASSWORD),
+                                                                           host=MONGO_HOST,
+                                                                           database=MONGO_DATABASE_NAME)
+        self.client = pymongo.MongoClient(mongo_uri)
         self.db = self.client[MONGO_DATABASE_NAME]
         self.logger = logging.getLogger('Stats')
 
