@@ -190,6 +190,7 @@ class Writer(Thread):
                         self.readings.save(reading)
                         self.bookmarks.save({
                                              '_id': 'seconds',
+                                             'timestamp': reading['reading_timestamp'],
                                              'usage': reading['total_watts'],
                                              'tempf': reading['temp_f']
                                              })
