@@ -5,13 +5,13 @@ In the winter of 2012, we received an electric bill for over $700. Granted that 
 
 There were a few that existed that had relatively advanced software for drawing charts and calculating stats, but they were pretty expensive, so I thought that maybe I could build something to do what I wanted instead. I had been wanting to learn about web app development for a while, so I decided that I would look into creating my own.
 
-## High Level Design ##
-
-![alt text](https://github.com/clinstid/energymon/raw/master/high_level_design.png "energymon screenshot")
-
 ## Screenshot ##
 
 ![alt text](https://github.com/clinstid/energymon/raw/master/energymon_screenshot_2013-07-06.png "energymon screenshot")
+
+## High Level Design ##
+
+![alt text](https://github.com/clinstid/energymon/raw/master/high_level_design.png "energymon screenshot")
 
 ## Hardware ##
 The basic building blocks for the hardware that provides data for energymon are a transmitter and receiver pair called an <a href="http://www.currentcost.net/Monitor%20Details.html">Envi kit</a>. The kit includes two clamps that go around the main power lines that come into the breaker box, a transmitter that the clamps plug into, and a receiver that pairs with the transmitter and displays power usage information.
