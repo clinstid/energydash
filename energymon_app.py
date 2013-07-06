@@ -15,6 +15,7 @@ client = pymongo.MongoClient(host=MONGO_HOST)
 db = client[MONGO_DATABASE_NAME]
 readings = db.envir_reading
 hours = db.hours
+bookmarks = db.bookmarks
 
 day_map = {
            'Mon': 1,
@@ -37,7 +38,7 @@ def get_avg(entries, key):
     return sum(key_entries) / len(key_entries)
 
 def get_last_entry():
-    return readings.find().sort('reading_timestamp', pymongo.DESCENDING).limit(1)[0]
+    return bookmarks.find_one({'_id': 'seconds'})
 
 def get_last_hour():
     now = datetime.now(tz=pytz.utc)

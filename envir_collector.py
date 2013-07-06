@@ -187,6 +187,12 @@ class Writer(Thread):
                 while not saved:
                     try:
                         self.readings.save(reading)
+                        self.bookmarks.save({
+                                             '_id': 'seconds',
+                                             'usage': reading['total_watts'],
+                                             'tempf': reading['temp_f']
+                                             })
+
                         saved = True
                     except Exception as e:
                         logger.error('Unhandled exception from db save: {}'.format(e))
