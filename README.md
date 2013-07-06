@@ -5,13 +5,13 @@ In the winter of 2012, we received an electric bill for over $700. Granted that 
 
 There were a few that existed that had relatively advanced software for drawing charts and calculating stats, but they were pretty expensive, so I thought that maybe I could build something to do what I wanted instead. I had been wanting to learn about web app development for a while, so I decided that I would look into creating my own.
 
+## Screenshot ##
+
+![alt text](https://github.com/clinstid/energymon/raw/master/energymon_screenshot_2013-07-06.png "energymon screenshot")
+
 ## High Level Design ##
 
 ![alt text](https://github.com/clinstid/energymon/raw/master/high_level_design.png "energymon screenshot")
-
-## Screenshot ##
-
-![alt text](https://github.com/clinstid/energymon/raw/master/energymon_screenshot_2013-06-30.png "energymon screenshot")
 
 ## Hardware ##
 The basic building blocks for the hardware that provides data for energymon are a transmitter and receiver pair called an <a href="http://www.currentcost.net/Monitor%20Details.html">Envi kit</a>. The kit includes two clamps that go around the main power lines that come into the breaker box, a transmitter that the clamps plug into, and a receiver that pairs with the transmitter and displays power usage information.
@@ -85,11 +85,16 @@ Example:
 ```
 
 ### Stats ###
-*Still working on this...*
+The `energymon_statsd.py` daemon is a python application that uses the documents in the `envir_reading` collection to build collections with coarser granularity so we can build charts with less data points. As you can see in the screenshot, there are charts based on hour-level granularity. 
 
+For exmaple, the first main chart covers the last 24 hours. So, the first collection built is called `hours` and it contains averages of the 6-second readings from `envir_reading`. This provides a quick MongoDB query to pick up averages over the last 24 hours.
+
+Building on the `hours` collection, there are also `hours_in_day` and `hours_per_dow` that cover averages for each of the 24 hours in any day and averages for each hour for each day of the week, respectively.
+
+The stats are updated every 60 seconds and `energymon_statsd.py` keeps track of where it left off by saving a document in the `bookmarks` collection.
 
 ### Web App ###
 The `energymon_app.py` module is a Flask-based web application. It pulls data from MongoDB and displays two main sections in the application:
 
 * **Current**: The top section shows the most recent reading on the left and a line graph of readings for the last 24 hours on the right.
-* **Stats/Charts**: The bottom, larger section presents tabs that have stats and charts for different time frames. *Still working on this.* :)
+* **Stats/Charts**: The bottom, larger section presents tabs that have stats and charts for different time frames.
