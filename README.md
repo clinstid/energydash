@@ -91,12 +91,15 @@ The `energymon_statsd.py` daemon is a python application that uses the documents
 As mentioned before, the database used for this app is MongoDB. It has the following collections:
 
 * **bookmarks**: Stores bookmarks to mark where a reader or writer left off. Mostly used in `energymon_statsd.py` but also used by `envir_collector.py` to store the last document it added to `envir_reading`:
+
 ```
     { "_id" : "envir_reading", "timestamp" : ISODate("2013-07-06T22:29:11.160Z") }
     { "_id" : "hours", "timestamp" : ISODate("2013-07-06T22:00:00Z") }
     { "_id" : "seconds", "usage" : 895, "timestamp" : ISODate("2013-07-06T22:29:53.884Z"), "tempf" : 74.6 }
 ```
+
 * **envir_reading**: Stores a document for every 6-second reading that comes from the EnviR receiver.
+
 ```
     {
             "_id" : ObjectId("51b1456172ea814c7fb8bf09"),
@@ -110,7 +113,9 @@ As mentioned before, the database used for this app is MongoDB. It has the follo
             "temp_f" : 69.2
     }
 ```
+
 * **hours**: Stores hour-granularity averages of the documents in `envir_reading`:
+
 ```
     {
             "_id" : ISODate("2013-06-07T02:00:00Z"),
@@ -124,7 +129,9 @@ As mentioned before, the database used for this app is MongoDB. It has the follo
             ]
     }
 ```
+
 * **hours_in_day**: Stores documents with averages for each of the 24 hours in all days:
+
 ```
     {
             "_id" : "23",
@@ -139,7 +146,9 @@ As mentioned before, the database used for this app is MongoDB. It has the follo
             "timezone" : "America/New_York"
     }
 ```
+
 * **hours_per_dow**: Stores documents with averages for each hour of each day of the week:
+
 ```
 {
         "_id" : "Wed",
