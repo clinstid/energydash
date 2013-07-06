@@ -10,13 +10,8 @@
 </div><!-- #header-->
 
 <div id="current">
-    <div id="current_header">
-        <div id="current_header_reading">
-            Last Reading
-        </div>
-        <div id="current_header_chart">
-            Last Hour
-        </div>
+    <div class="section_header" id="current_header">
+        Most Recent
     </div> <!-- #current_header -->
 
     <div id="current_text_container">
@@ -36,33 +31,80 @@
 </div><!-- #current -->
 
 <div id="content">
-    <div id="tabs">
-        <div class="tab_selected" id="total_usage">Total Usage</div>
-        <div class="tab" id="daily_usage">Daily Usage</div>
-        <div class="tab tab_last" id="monthly_usage">Monthly Usage</div>
-    </div> <!-- #tabs -->
     <div id="content_body">
-        <div id="total_usage_div">
-            <p>total_usage_div</p>
-        </div>
-        <div id="daily_usage_div">
-            <p>daily_usage_div</p>
-        </div>
-        <div id="monthly_usage_div">
-            <p>monthly_usage_div</p>
-        </div>
+        <div class="content_container" id="last_24_hours">
+            <div class="section_header" id="last_24_hours_header">
+                Last 24 Hours
+            </div> <!-- #last_24_hours_header -->
+            <div class="content_chart" id="last_24_hours_chart">
+            </div> <!-- #last_24_hours_chart -->
+            <div class="content_table" id="last_24_hours_table">
+                <table style="width: 100%;">
+                    <tr>
+                        <td align="center">
+                            <table>
+                                <tr class="stats_row">
+                                    <td class="label">Min Usage</td>
+                                    <td class="value"><span id="last_24_hours_usage_min"></span> watts</td>
+                                </tr>
+                                <tr class="stats_row">
+                                    <td class="label">Max Usage</td>
+                                    <td class="value"><span id="last_24_hours_usage_max"></span> watts</td>
+                                </tr>
+                                <tr class="stats_row">
+                                    <td class="label">Average Usage</td>
+                                    <td class="value"><span id="last_24_hours_usage_avg"></span> watts</td>
+                                </tr>
+                            </table>
+                        </td>
+                        <td align="center">
+                            <table>
+                                <tr class="stats_row">
+                                    <td class="label">Min Temperature</td>
+                                    <td class="value"><span id="last_24_hours_tempf_min"></span>&#176;F</td>
+                                </tr>
+                                <tr class="stats_row">
+                                    <td class="label">Max Temperature</td>
+                                    <td class="value"><span id="last_24_hours_tempf_max"></span>&#176;F</td>
+                                </tr>
+                                <tr class="stats_row">
+                                    <td class="label">Average Temperature</td>
+                                    <td class="value"><span id="last_24_hours_tempf_avg"></span>&#176;F</td>
+                                </tr>
+                            </table>
+                        </td>
+                    </tr>
+                </table>
+            </div> <!-- #last_24_hours_table -->
+        </div> <!-- #last_24_hours -->
+        <div class="content_container" id="dow">
+            <div class="section_header" id="dow_header">
+                Usage by Day
+            </div> <!-- #dow_header -->
+            <div class="content_chart" id="dow_chart">
+            </div> <!-- #dow_chart -->
+        </div> <!-- #dow -->
+        <div class="content_container" id="hod">
+            <div class="section_header" id="hod_header">
+                Usage by Hour of Day
+            </div> <!-- #hod_header -->
+            <div class="content_chart" id="hod_chart">
+            </div> <!-- #hod_chart -->
+        </div> <!-- #hod -->
     </div> <!-- #content_body -->
 </div><!-- #content-->
+
+<script type="text/javascript">
+    var local_timezone = "{{ local_timezone }}";
+    var base_url = "{{ url_for('start_app') }}";
+    var tz_url = "{{ url_for('static', filename='tz') }}";
+</script>
 
 <script src="{{ url_for('static', filename='js/jquery.js') }}"></script>
 <!--[if lte IE 8]><script language="javascript" type="text/javascript" src="{{ url_for('static', filename='js/excanvas.min.js') }}"></script><![endif]-->
 <script src="{{ url_for('static', filename='js/timezone-js/date.js') }}"></script>
 <script src="{{ url_for('static', filename='js/flot/jquery.flot.js') }}"></script>
 <script src="{{ url_for('static', filename='js/flot/jquery.flot.time.js') }}"></script>
-
-<script type="text/javascript">
-    var local_timezone = "{{ local_timezone }}";
-</script>
 
 <script src="{{ url_for('static', filename='js/update_stats.js') }}"></script>
 <script src="{{ url_for('static', filename='js/main.js') }}"></script>
