@@ -155,7 +155,9 @@ class Writer(Thread):
                                                                            host=MONGO_HOST,
                                                                            database=MONGO_DATABASE_NAME)
 
-        self.client = pymongo.MongoClient(mongo_uri)
+        self.client = pymongo.MongoReplicaSetClient(hosts_or_uri=mongo_uri,
+                                                    replicaSet=MONGO_REPLICA_SET,
+                                                    read_preference=pymongo.read_preferences.ReadPreference.PRIMARY_PREFERRED)
         self.db = self.client[MONGO_DATABASE_NAME]
         self.readings = self.db.envir_reading
         self.bookmarks = self.db.bookmarks
