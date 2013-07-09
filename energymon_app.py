@@ -17,9 +17,9 @@ mongo_uri = 'mongodb://{user}:{password}@{host}/{database}'.format(user=urllib.q
                                                                    password=urllib.quote(MONGO_PASSWORD),
                                                                    host=MONGO_HOST,
                                                                    database=MONGO_DATABASE_NAME)
-self.client = pymongo.MongoReplicaSetClient(hosts_or_uri=mongo_uri,
-                                            replicaSet=MONGO_REPLICA_SET,
-                                            read_preference=pymongo.read_preferences.ReadPreference.NEAREST)
+client = pymongo.MongoReplicaSetClient(hosts_or_uri=mongo_uri,
+                                       replicaSet=MONGO_REPLICA_SET,
+                                       read_preference=pymongo.read_preferences.ReadPreference.NEAREST)
 db = client[MONGO_DATABASE_NAME]
 readings = db.envir_reading
 hours = db.hours
