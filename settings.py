@@ -15,6 +15,7 @@ import mongodb_secret
 MONGO_USER=mongodb_secret.MONGO_USER
 MONGO_PASSWORD=mongodb_secret.MONGO_PASSWORD
 MONGO_HOST=mongodb_secret.MONGO_HOST
+MONGO_REPLICA_SET=mongodb_secret.MONGO_REPLICA_SET
 
 # The XML provided by the EnviR includes "days since birth" so we need to know
 # the "birth date" so we can calculate the actual timestamp for each message.
