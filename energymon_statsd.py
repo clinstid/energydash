@@ -25,7 +25,8 @@ class Stats(object):
                                                                            password=urllib.quote(MONGO_PASSWORD),
                                                                            host=MONGO_HOST,
                                                                            database=MONGO_DATABASE_NAME)
-        self.client = pymongo.MongoClient(mongo_uri)
+        self.client = pymongo.MongoClient(host=mongo_uri,
+                                          read_preference=pymongo.read_preferences.ReadPreference.PRIMARY_PREFERRED)
         self.db = self.client[MONGO_DATABASE_NAME]
         self.logger = logging.getLogger('Stats')
 
