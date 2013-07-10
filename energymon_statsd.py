@@ -58,21 +58,27 @@ class Stats(object):
 
         # Figure out where we left off by finding the timestamp of the last
         # bookmark.
+        query = {}
         reading_bookmark = bookmarks.find_one({'_id': 'envir_reading'})
-        if reading_bookmark is None:
-            reading_bookmark = { 
-                                     '_id': 'envir_reading',
-                                     'timestamp': epoch 
-                                    }
-
-        logger.info('Last bookmark was {}'.format(reading_bookmark))
+        if reading_bookmark is not None:
+            logger.info('Last bookmark was {}'.format(reading_bookmark))
+            query = {
+                'reading_timestamp': {
+                     '$gt': reading_bookmark['timestamp']
+                 }
+            }
 
         logger.info('{} total readings.'.format(readings.count()))
-        cursor = readings.find({'reading_timestamp': {'$gt': reading_bookmark['timestamp']}})
+        cursor = readings.find(query)
         logger.info('{} new readings since last bookmark.'.format(cursor.count()));
 
         current_hour = None
+        reading_count = 0
         for reading in cursor:
+            reading_count += 1
+            if reading_count % 100:
+                logger.info('Processed {} readings.'.format(reading_count))
+
             if reading['total_watts'] == 0 or reading['temp_f'] == 0:
                 continue
 
@@ -111,7 +117,13 @@ class Stats(object):
 
                 current_hour['timestamps'].append(timestamp)
 
-            reading_bookmark['timestamp'] = timestamp 
+            if reading_bookmark is None:
+                reading_bookmark = {
+                    '_id': 'envir_reading',
+                    'timestamp': timestamp
+                }
+            else:
+                reading_bookmark['timestamp'] = timestamp 
 
         if current_hour:
             new_id = hours.save(current_hour)
