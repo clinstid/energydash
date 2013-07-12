@@ -72,10 +72,6 @@ $().ready(function() {
     var current_interval_id = window.setInterval(update_current_stats, 30000);
     var content_interval_id = window.setInterval(update_content_stats, 30000);
 
-    // Initialize timezone-js
-    timezoneJS.timezone.zoneFileBasePath = tz_url;
-    timezoneJS.timezone.init();
-
     // Update current stats and chart to get things rolling.
     update_current_stats();
     update_content_stats();
