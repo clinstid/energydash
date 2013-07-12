@@ -116,7 +116,12 @@ def last_24_hours():
     start = now - timedelta(hours=24)
     usage_list = []
     tempf_list = []
-    cursor = hours.find({'_id': {'$gte': start}})
+    cursor = hours.find({'_id': {'$gte': start}},
+                        {
+                            '_id': 1,
+                            'average_usage': 1,
+                            'average_tempf': 1
+                         })
     for hour in cursor: 
         usage_list.append([int(dt_to_seconds(hour['_id']))*1000,
                            hour['average_usage']])
