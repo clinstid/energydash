@@ -76,7 +76,7 @@ class Stats(object):
         reading_count = 0
         for reading in cursor:
             reading_count += 1
-            if reading_count % 100:
+            if (reading_count % 1000) == 0:
                 logger.info('Processed {} readings.'.format(reading_count))
 
             if reading['total_watts'] == 0 or reading['temp_f'] == 0:
