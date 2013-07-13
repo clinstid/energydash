@@ -51,7 +51,9 @@ def get_last_entry():
 def get_last_hour():
     now = datetime.now(tz=pytz.utc)
     one_hour_ago = now - timedelta(hours=1)
+    readings.ensure_index('reading_timestamp', pymongo.ASCENDING)
     cursor = readings.find({'reading_timestamp': {'$gte': one_hour_ago}})
+    cursor = cursor.sort('reading_timestamp', pymongo.ASCENDING)
     return map(lambda reading: [int(dt_to_seconds(reading['reading_timestamp']))*1000, 
                                 reading['total_watts']], 
                cursor) 
@@ -89,7 +91,7 @@ def fetch_current_state():
 @app.route('/hod')
 def hours_of_day():
     hours_in_day = db.hours_in_day
-    cursor = hours_in_day.find()
+    cursor = hours_in_day.find({}, {'_id': 1, 'average_usage': 1, 'average_tempf': 1})
     usage_list = []
     tempf_list = []
     for hour in cursor:
@@ -121,7 +123,7 @@ def last_24_hours():
                             '_id': 1,
                             'average_usage': 1,
                             'average_tempf': 1
-                         })
+                        })
     for hour in cursor: 
         usage_list.append([int(dt_to_seconds(hour['_id']))*1000,
                            hour['average_usage']])
@@ -164,7 +166,11 @@ def get_dow():
                'Sun': 7
                }
     hours_per_dow = db.hours_per_dow
-    cursor = hours_per_dow.find()
+    cursor = hours_per_dow.find({},
+                                {
+                                    '_id': 1,
+                                    'hours': 1
+                                })
     days = [] 
     for day in cursor:
         hour_list = []

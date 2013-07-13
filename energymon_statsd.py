@@ -35,15 +35,19 @@ class Stats(object):
         self.client.disconnect()
         self.stopping = True
 
-    def update_hours_from_readings(self):
+    def update_minutes_and_hours_from_readings(self):
         '''
-        This method updates the hours collection with documents that contain
-        the average usage and temp_f by hour for all of the data available from
-        the envir_reading collection.
+        This method updates the ten_minutes and hours collections with
+        documents that contain the average usage and temp_f for each
+        granularity for all of the data available from the envir_reading
+        collection.
 
         Collections used:
             1. envir_reading: Collection of readings from energy monitor
                receiver every 6 seconds.
+
+            2. ten_minutes: Collection of usage and temp_f averages for each 10
+               minute window over all of the collected data.
 
             2. hours: Collection of usage and temp_f averages for each hour
                over all of the collected data.
@@ -51,10 +55,11 @@ class Stats(object):
 
         readings = self.db.envir_reading
         hours = self.db.hours
+        ten_minutes = self.db.ten_minutes
         bookmarks = self.db.bookmarks
         logger = self.logger
 
-        logger.info('Updating hours from envir_reading.')
+        logger.info('Updating minutes/hours from envir_reading.')
 
         # Figure out where we left off by finding the timestamp of the last
         # bookmark.
@@ -69,7 +74,8 @@ class Stats(object):
             }
 
         logger.info('{} total readings.'.format(readings.count()))
-        cursor = readings.find(query)
+        readings.ensure_index('reading_timestamp', pymongo.ASCENDING)
+        cursor = readings.find(query).sort('reading_timestamp', pymongo.ASCENDING)
         logger.info('{} new readings since last bookmark.'.format(cursor.count()));
 
         current_hour = None
@@ -80,6 +86,8 @@ class Stats(object):
                 logger.info('Processed {} readings.'.format(reading_count))
 
             if reading['total_watts'] == 0 or reading['temp_f'] == 0:
+                logger.info('Skipping reading at {}: total_watts({}) temp_f({})'.format(
+                            reading['total_watts'], reading['temp_f']))
                 continue
 
             timestamp = reading['reading_timestamp']
@@ -222,13 +230,15 @@ class Stats(object):
 
             if not hour['_id'] in current_hour_of_day['timestamps']:
                 # Update the usage average.
-                (current_hour_of_day['average_usage'], temp_count) = update_average(
-                    old_average=current_hour_of_day['average_usage'],
-                    old_count=current_hour_of_day['count'],
-                    new_value=hour['average_usage'])
+                (current_hour_of_day['average_usage'], 
+                 temp_count) = update_average(
+                                              old_average=current_hour_of_day['average_usage'],
+                                              old_count=current_hour_of_day['count'],
+                                              new_value=hour['average_usage'])
 
                 # Update the tempf average.
-                (current_hour_of_day['average_tempf'], current_hour_of_day['count']) = update_average(
+                (current_hour_of_day['average_tempf'], 
+                 current_hour_of_day['count']) = update_average(
                     old_average=current_hour_of_day['average_tempf'],
                     old_count=current_hour_of_day['count'],
                     new_value=hour['average_tempf'])
@@ -285,6 +295,8 @@ class Stats(object):
                     old_count=current_hour_of_dow['count'],
                     new_value=hour['average_tempf'])
 
+                current_hour_of_dow['timestamps'].append(hour['_id'])
+
             # Update the naive (UTC) datetime bookmark
             hour_bookmark['timestamp'] = hour['_id']
 
@@ -302,7 +314,7 @@ class Stats(object):
         logger.info('Saved bookmark {}'.format(hour_bookmark))
 
     def update_stats(self):
-        self.update_hours_from_readings()
+        self.update_minutes_and_hours_from_readings()
         self.update_hours_per_day_from_hours()
 
     def run(self):
