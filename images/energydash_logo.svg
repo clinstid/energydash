@@ -15,7 +15,7 @@
    version="1.1"
    inkscape:version="0.48.2 r9819"
    sodipodi:docname="energydash_logo.svg"
-   inkscape:export-filename="/Users/clinstid/src/powerdash/static/images/powerdash_logo.png"
+   inkscape:export-filename="/Users/clinstid/src/energydash/static/images/energydash_logo.png"
    inkscape:export-xdpi="180.67999"
    inkscape:export-ydpi="180.67999">
   <defs
@@ -54,39 +54,6 @@
          in="result10"
          mode="normal" />
     </filter>
-    <filter
-       id="filter3096"
-       inkscape:label="Drop shadow"
-       width="1.5"
-       height="1.5"
-       x="-.25"
-       y="-.25">
-      <feGaussianBlur
-         id="feGaussianBlur3098"
-         in="SourceAlpha"
-         stdDeviation="2"
-         result="blur" />
-      <feColorMatrix
-         id="feColorMatrix3100"
-         result="bluralpha"
-         type="matrix"
-         values="1 0 0 0 0 0 1 0 0 0 0 0 1 0 0 0 0 0 0.5 0 " />
-      <feOffset
-         id="feOffset3102"
-         in="bluralpha"
-         dx="4"
-         dy="4"
-         result="offsetBlur" />
-      <feMerge
-         id="feMerge3104">
-        <feMergeNode
-           id="feMergeNode3106"
-           in="offsetBlur" />
-        <feMergeNode
-           id="feMergeNode3108"
-           in="SourceGraphic" />
-      </feMerge>
-    </filter>
   </defs>
   <sodipodi:namedview
      id="base"
@@ -124,15 +91,14 @@
      id="layer1">
     <path
        style="fill:#b3b3b3;stroke:#000000;stroke-width:0.49442887px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1;filter:url(#filter2995)"
-       d="m 440.89191,502.08184 -23.95169,-35.05576 16.90708,-16.99674 -4.69641,-30.27543 14.55887,31.86887 -14.55887,17.52789 z"
+       d="m 435.84115,503.09199 -23.95169,-35.05576 16.90708,-16.99674 -4.69641,-30.27543 14.55887,31.86887 -14.55887,17.52789 z"
        id="path2993"
        inkscape:connector-curvature="0"
-       sodipodi:nodetypes="ccccccc"
-       transform="matrix(1.0237436,0.13563342,-0.11845117,1.1722455,43.789055,-134.94211)" />
+       sodipodi:nodetypes="ccccccc" />
     <flowRoot
        xml:space="preserve"
        id="flowRoot2985"
-       style="font-size:40px;font-style:normal;font-weight:normal;line-height:125%;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;filter:url(#filter3096);font-family:Sans"><flowRegion
+       style="font-size:40px;font-style:normal;font-weight:normal;line-height:125%;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;font-family:Sans"><flowRegion
          id="flowRegion2987"><rect
            id="rect2989"
            width="435.37573"
@@ -140,9 +106,5 @@
            x="212.13203"
            y="422.02701" /></flowRegion><flowPara
          id="flowPara2991"
-         style="font-size:56px"><flowSpan
-           style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;fill:#ffff00;font-family:Droid Sans Mono;-inkscape-font-specification:Droid Sans Mono"
-           id="flowSpan3080">energy</flowSpan><flowSpan
-           style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;fill:#000080;font-family:Droid Sans Mono;-inkscape-font-specification:Droid Sans Mono"
-           id="flowSpan3110"> dash</flowSpan></flowPara></flowRoot>  </g>
+         style="font-size:56px">energy  dash</flowPara></flowRoot>  </g>
 </svg>
