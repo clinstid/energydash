@@ -9,11 +9,11 @@ There were a few that existed that had relatively advanced software for drawing 
 
 ## Screenshot ##
 
-![alt text](https://github.com/clinstid/energydash/raw/master/energydash_screenshot_2013-07-06.png "energydash screenshot")
+![alt text](https://github.com/clinstid/energydash/raw/master/energydash_screenshot_2013-07-14.png "energydash screenshot")
 
 ## High Level Design ##
 
-![alt text](https://github.com/clinstid/energydash/raw/master/high_level_design.png "energydash screenshot")
+![alt text](https://github.com/clinstid/energydash/raw/master/high_level_design.png "energydash high level design")
 
 ## Hardware ##
 The basic building blocks for the hardware that provides data for energydash are a transmitter and receiver pair called an <a href="http://www.currentcost.net/Monitor%20Details.html">Envi kit</a>. The kit includes two clamps that go around the main power lines that come into the breaker box, a transmitter that the clamps plug into, and a receiver that pairs with the transmitter and displays power usage information.
