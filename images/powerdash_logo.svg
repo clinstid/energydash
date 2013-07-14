@@ -14,7 +14,10 @@
    id="svg2"
    version="1.1"
    inkscape:version="0.48.2 r9819"
-   sodipodi:docname="New document 1">
+   sodipodi:docname="powerdash_logo.svg"
+   inkscape:export-filename="/Users/clinstid/src/powerdash/static/images/powerdash_logo.png"
+   inkscape:export-xdpi="180.67999"
+   inkscape:export-ydpi="180.67999">
   <defs
      id="defs4">
     <filter
@@ -88,7 +91,7 @@
      id="layer1">
     <path
        style="fill:#b3b3b3;stroke:#000000;stroke-width:0.49442887px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1;filter:url(#filter2995)"
-       d="m 361.08986,491.98032 -23.95169,-35.05576 16.90708,-16.99674 -4.69641,-30.27543 14.55887,31.86887 -14.55887,17.52789 z"
+       d="m 412.60764,505.1123 -23.95169,-35.05576 16.90708,-16.99674 -4.69641,-30.27543 14.55887,31.86887 -14.55887,17.52789 z"
        id="path2993"
        inkscape:connector-curvature="0"
        sodipodi:nodetypes="ccccccc" />
@@ -102,5 +105,6 @@
            height="140.41121"
            x="212.13203"
            y="422.02701" /></flowRegion><flowPara
-         id="flowPara2991">power  dash</flowPara></flowRoot>  </g>
+         id="flowPara2991"
+         style="font-size:56px">power  dash</flowPara></flowRoot>  </g>
 </svg>
