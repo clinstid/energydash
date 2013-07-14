@@ -7,7 +7,7 @@ LOCAL_TIMEZONE='America/New_York'
 ################################################################################
 # MongoDB settings
 ################################################################################
-MONGO_DATABASE_NAME='energymon'
+MONGO_DATABASE_NAME='powerdash'
 
 # Host name, user name and password are defined in a file NOT in revision
 # control.

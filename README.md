@@ -1,6 +1,6 @@
-# energymon: Energy Monitor Web App #
+# powerdash: Energy Monitor Web App #
 
-Try it <a href="http://linstid.com/energymon">here</a>.
+Try it <a href="http://linstid.com/powerdash">here</a>.
 
 ## Background ##
 In the winter of 2012, we received an electric bill for over $700. Granted that was a pretty bad winter (and we heat a sunroom that has mostly glass walls with a small electric heater that's running all the time), but it showed me that I honestly had no real grasp of the amount of power we were using, so I started doing some research on power monitors.
@@ -9,14 +9,14 @@ There were a few that existed that had relatively advanced software for drawing 
 
 ## Screenshot ##
 
-![alt text](https://github.com/clinstid/energymon/raw/master/energymon_screenshot_2013-07-06.png "energymon screenshot")
+![alt text](https://github.com/clinstid/powerdash/raw/master/powerdash_screenshot_2013-07-06.png "powerdash screenshot")
 
 ## High Level Design ##
 
-![alt text](https://github.com/clinstid/energymon/raw/master/high_level_design.png "energymon screenshot")
+![alt text](https://github.com/clinstid/powerdash/raw/master/high_level_design.png "powerdash screenshot")
 
 ## Hardware ##
-The basic building blocks for the hardware that provides data for energymon are a transmitter and receiver pair called an <a href="http://www.currentcost.net/Monitor%20Details.html">Envi kit</a>. The kit includes two clamps that go around the main power lines that come into the breaker box, a transmitter that the clamps plug into, and a receiver that pairs with the transmitter and displays power usage information.
+The basic building blocks for the hardware that provides data for powerdash are a transmitter and receiver pair called an <a href="http://www.currentcost.net/Monitor%20Details.html">Envi kit</a>. The kit includes two clamps that go around the main power lines that come into the breaker box, a transmitter that the clamps plug into, and a receiver that pairs with the transmitter and displays power usage information.
 
 In addition to displaying information, the receiver also has an RJ-45 serial port on the back. That serial port transmits an xml message every 6 seconds with the data it received from the transmitter. The Current Cost folks have graciously provided an <a href="http://www.currentcost.com/download/Envi%20XML%20v19%20-%202011-01-11.pdf">XML description document</a> that aided me in gleaning meaningful data from the messages. I also purchased an RJ-45 to USB serial adapter that thankfully has Linux drivers.
 
@@ -87,12 +87,12 @@ Example:
 ```
 
 ### Stats ###
-The `energymon_statsd.py` daemon is a python application that uses the documents in the `envir_reading` collection to build collections with coarser granularity to build charts with less data points. For exmaple, the first chart below the current readings covers the last 24 hours. For each chart type, the stats are stored in a relevant collection in the database. The stats are updated every 60 seconds and `energymon_statsd.py` keeps track of where it left off by saving a document in the `bookmarks` collection.
+The `powerdash_statsd.py` daemon is a python application that uses the documents in the `envir_reading` collection to build collections with coarser granularity to build charts with less data points. For exmaple, the first chart below the current readings covers the last 24 hours. For each chart type, the stats are stored in a relevant collection in the database. The stats are updated every 60 seconds and `powerdash_statsd.py` keeps track of where it left off by saving a document in the `bookmarks` collection.
 
 ### Database ###
 As mentioned before, the database used for this app is MongoDB. It has the following collections:
 
-* **bookmarks**: Stores bookmarks to mark where a reader or writer left off. Mostly used in `energymon_statsd.py` but also used by `envir_collector.py` to store the last document it added to `envir_reading`:
+* **bookmarks**: Stores bookmarks to mark where a reader or writer left off. Mostly used in `powerdash_statsd.py` but also used by `envir_collector.py` to store the last document it added to `envir_reading`:
 
 ```
     { "_id" : "envir_reading", "timestamp" : ISODate("2013-07-06T22:29:11.160Z") }
@@ -174,7 +174,7 @@ As mentioned before, the database used for this app is MongoDB. It has the follo
 ```
 
 ### Web App ###
-The `energymon_app.py` module is a Flask-based web application. It pulls data from MongoDB and displays two main sections in the application:
+The `powerdash_app.py` module is a Flask-based web application. It pulls data from MongoDB and displays two main sections in the application:
 
 * **Current**: The top section shows the most recent reading on the left and a line graph of readings for the last 24 hours on the right.
 * **Stats/Charts**: The bottom, larger section presents tabs that have stats and charts for different time frames.
