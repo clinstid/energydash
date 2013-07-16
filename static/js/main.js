@@ -83,6 +83,11 @@ function add_actions()
 
 // main
 $().ready(function() {
+    // Initialize timezone-js
+    timezoneJS.timezone.zoneFileBasePath = tz_url;
+    timezoneJS.timezone.defaultZoneFile = ['northamerica'];
+    timezoneJS.timezone.init({async: false});
+
     // Register action/event handlers.
     add_actions();
 
