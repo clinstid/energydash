@@ -2,6 +2,8 @@
 
 Try it <a href="http://linstid.com/energydash">here</a>.
 
+See the enhancement tag in the Issues list for features I'm planning on adding when I have time.
+
 ## Background ##
 In the winter of 2012, we received an electric bill for over $700. Granted that was a pretty bad winter (and we heat a sunroom that has mostly glass walls with a small electric heater that's running all the time), but it showed me that I honestly had no real grasp of the amount of power we were using, so I started doing some research on power monitors.
 

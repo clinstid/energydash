@@ -133,7 +133,6 @@ def hours_of_day():
 
 @app.route('/last_24_hours')
 def last_24_hours():
-    logger = logging.getLogger('last_24_hours')
     now = datetime.now(tz=pytz.utc)
     start = now - timedelta(hours=24)
     usage_list = []
@@ -150,8 +149,6 @@ def last_24_hours():
         tempf_list.append([int(dt_to_seconds(hour['_id']))*1000,
                            hour['average_tempf']])
 
-    logger.info(usage_list)
-    logger.info(tempf_list)
     hours_list = [
                   {
                    'label': 'Usage (watts)',
