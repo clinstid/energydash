@@ -18,48 +18,74 @@
  * ========================================================================== */
 
 var charts = [];
+var menu_is_on = false;
 
-function tab_select() 
+function menu_off(menu)
 {
-    if ($(this).hasClass("tab_selected"))
-    {
-        return;
-    }
-
-    tab_in(this);
-    tab_out(this);
-
-    $(".tab_selected").removeClass("tab_selected").addClass("tab");
-    $(this).removeClass("tab").addClass("tab_selected");
-    $("#total_usage_div").css("display", "none");
-    $("#daily_usage_div").css("display", "none");
-    $("#monthly_usage_div").css("display", "none");
-    var div_id = "#" + $(this).attr('id') + "_div";
-    $(div_id).css("display", "block");
+    var menu = $(".header_menu");
+    menu.css("display", "none");
+    window.menu_is_on = false;
+    menu_img_normal();
 }
 
-function tab_in() 
+function update_menu_position()
 {
-    if ($(this).hasClass("tab_selected"))
-    {
-        return;
-    }
-
-    $(this).css("cursor", "pointer");
+    var menu = $(".header_menu");
+    new_left = $("div#header_menu_button").offset().left;
+    menu.css("left", new_left);
+    console.log("Moving menu to %d", new_left);
 }
 
-function tab_out() 
+function menu_on(event)
 {
-    if ($(this).hasClass("tab_selected"))
-    {
-        return;
-    }
+    var menu = $(".header_menu");
+    menu.css("display", "block");
+    update_menu_position(menu);
+    window.menu_is_on = true;
+    menu_img_hl();
+    event.stopPropagation();
+}
 
-    $(this).css("cursor", "auto");
+function turn_menu_off_if_on()
+{
+    if (window.menu_is_on)
+    {
+        menu_off();
+    }
+}
+
+function menu_toggle(event)
+{
+    if (window.menu_is_on)
+    {
+        menu_off();
+    }
+    else
+    {
+        menu_on(event);
+    }
+}
+
+function menu_img_hl()
+{
+    $("img#header_menu_img").attr("src", images_url + "/menu_highlighted.png");
+    $("div#header_menu_button").css("background", "rgb(82, 82, 82)");
+}
+
+function menu_img_normal()
+{
+    if (!window.menu_is_on)
+    {
+        $("img#header_menu_img").attr("src", images_url + "/menu.png");
+        $("div#header_menu_button").css("background", "rgb(63, 63, 63)");
+    }
 }
 
 function window_resize() 
 {
+    // Just in case the menu is active, fix its position.
+    update_menu_position()
+
     // If the window is resized, then we'll need to redraw the current chart.
     for (name in window.charts)
     {
@@ -87,6 +113,13 @@ $().ready(function() {
     timezoneJS.timezone.zoneFileBasePath = tz_url;
     timezoneJS.timezone.defaultZoneFile = ['northamerica'];
     timezoneJS.timezone.init({async: false});
+
+    // Setup menu
+    $("div#header_menu_button").hover(menu_img_hl, menu_img_normal);
+    $("div#header_menu_button").click(menu_toggle);
+    $("body").click(turn_menu_off_if_on);
+    //$("div#header").click(turn_menu_off_if_on);
+    //$("div.header_menu").click(turn_menu_off_if_on);
 
     // Register action/event handlers.
     add_actions();

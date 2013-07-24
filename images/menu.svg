@@ -1,0 +1,190 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!-- Created with Inkscape (http://www.inkscape.org/) -->
+
+<svg
+   xmlns:dc="http://purl.org/dc/elements/1.1/"
+   xmlns:cc="http://creativecommons.org/ns#"
+   xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+   xmlns:svg="http://www.w3.org/2000/svg"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   width="744.09448819"
+   height="1052.3622047"
+   id="svg2"
+   version="1.1"
+   inkscape:version="0.48.4 r9939"
+   sodipodi:docname="menu.svg"
+   inkscape:export-filename="/home/clinstid/src/energydash/static/images/menu.png"
+   inkscape:export-xdpi="180.67999"
+   inkscape:export-ydpi="180.67999">
+  <defs
+     id="defs4">
+    <filter
+       id="filter3028"
+       inkscape:menu-tooltip="In and out glow with a possible offset and colorizable flood"
+       inkscape:menu="Shadows and Glows"
+       inkscape:label="Cutout Glow"
+       color-interpolation-filters="sRGB">
+      <feOffset
+         id="feOffset3030"
+         dy="3"
+         dx="3" />
+      <feGaussianBlur
+         id="feGaussianBlur3032"
+         result="result8"
+         stdDeviation="3" />
+      <feFlood
+         id="feFlood3034"
+         flood-color="rgb(0,0,0)"
+         flood-opacity="1"
+         in="result8"
+         result="result10" />
+      <feComposite
+         id="feComposite3036"
+         in2="SourceGraphic"
+         operator="in"
+         in="result10"
+         result="result9" />
+      <feBlend
+         id="feBlend3038"
+         in2="result9"
+         mode="normal"
+         in="result8" />
+    </filter>
+    <filter
+       id="filter3040"
+       inkscape:menu-tooltip="In and out glow with a possible offset and colorizable flood"
+       inkscape:menu="Shadows and Glows"
+       inkscape:label="Cutout Glow"
+       color-interpolation-filters="sRGB">
+      <feOffset
+         id="feOffset3042"
+         dy="3"
+         dx="3" />
+      <feGaussianBlur
+         id="feGaussianBlur3044"
+         result="result8"
+         stdDeviation="3" />
+      <feFlood
+         id="feFlood3046"
+         flood-color="rgb(0,0,0)"
+         flood-opacity="1"
+         in="result8"
+         result="result10" />
+      <feComposite
+         id="feComposite3048"
+         in2="SourceGraphic"
+         operator="in"
+         in="result10"
+         result="result9" />
+      <feBlend
+         id="feBlend3050"
+         in2="result9"
+         mode="normal"
+         in="result8" />
+    </filter>
+    <filter
+       id="filter3052"
+       inkscape:menu-tooltip="In and out glow with a possible offset and colorizable flood"
+       inkscape:menu="Shadows and Glows"
+       inkscape:label="Cutout Glow"
+       color-interpolation-filters="sRGB">
+      <feOffset
+         id="feOffset3054"
+         dy="3"
+         dx="3" />
+      <feGaussianBlur
+         id="feGaussianBlur3056"
+         result="result8"
+         stdDeviation="3" />
+      <feFlood
+         id="feFlood3058"
+         flood-color="rgb(0,0,0)"
+         flood-opacity="1"
+         in="result8"
+         result="result10" />
+      <feComposite
+         id="feComposite3060"
+         in2="SourceGraphic"
+         operator="in"
+         in="result10"
+         result="result9" />
+      <feBlend
+         id="feBlend3062"
+         in2="result9"
+         mode="normal"
+         in="result8" />
+    </filter>
+  </defs>
+  <sodipodi:namedview
+     id="base"
+     pagecolor="#ffffff"
+     bordercolor="#666666"
+     borderopacity="1.0"
+     inkscape:pageopacity="0.0"
+     inkscape:pageshadow="2"
+     inkscape:zoom="0.98994949"
+     inkscape:cx="326.49056"
+     inkscape:cy="521.93022"
+     inkscape:document-units="px"
+     inkscape:current-layer="layer1"
+     showgrid="false"
+     inkscape:window-width="1572"
+     inkscape:window-height="1157"
+     inkscape:window-x="1920"
+     inkscape:window-y="27"
+     inkscape:window-maximized="0" />
+  <metadata
+     id="metadata7">
+    <rdf:RDF>
+      <cc:Work
+         rdf:about="">
+        <dc:format>image/svg+xml</dc:format>
+        <dc:type
+           rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
+        <dc:title></dc:title>
+      </cc:Work>
+    </rdf:RDF>
+  </metadata>
+  <g
+     inkscape:label="Layer 1"
+     inkscape:groupmode="layer"
+     id="layer1">
+    <flowRoot
+       xml:space="preserve"
+       id="flowRoot2985"
+       style="font-size:40px;font-style:normal;font-weight:normal;line-height:125%;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;font-family:Sans"
+       transform="matrix(1.5747126,0,0,1,-95.267828,0)"><flowRegion
+         id="flowRegion2987"><rect
+           id="rect2989"
+           width="128.28937"
+           height="273.75134"
+           x="196.97975"
+           y="227.06755" /></flowRegion><flowPara
+         id="flowPara2995" /></flowRoot>    <rect
+       style="fill:#cccccc;fill-opacity:0.89803922;filter:url(#filter3052)"
+       id="rect3001"
+       width="29.294424"
+       height="37.375645"
+       x="168.69547"
+       y="247.2706"
+       transform="matrix(1.5747126,0,0,1,-95.267828,0)" />
+    <rect
+       style="fill:#cccccc;fill-opacity:0.89803922;filter:url(#filter3040)"
+       id="rect3001-1"
+       width="29.294424"
+       height="37.375645"
+       x="168.69547"
+       y="303.08154"
+       transform="matrix(1.5747126,0,0,1,-95.267828,0)" />
+    <rect
+       style="fill:#cccccc;fill-opacity:0.89803922;filter:url(#filter3028)"
+       id="rect3001-0"
+       width="29.294424"
+       height="37.375645"
+       x="168.69547"
+       y="358.89249"
+       transform="matrix(1.5747126,0,0,1,-95.267828,0)" />
+  </g>
+</svg>

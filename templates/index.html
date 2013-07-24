@@ -2,12 +2,30 @@
 {% block head %}
 {{ super() }}
 <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}" type="text/css" media="screen, projection" />
+<link rel="stylesheet" href="{{ url_for('static', filename='css/dark_lightning/jquery-ui-1.10.3.custom.css') }}" type="text/css" media="screen, projection" />
 {% endblock %}
 
 {% block body %}
-<div id="header">
-    <a href="https://github.com/clinstid/energydash"><img alt="energydash" src="{{ url_for('static', filename='images/energydash_logo.png') }}" style="height: 3em;" /></a>
-</div><!-- #header-->
+<nav id="header">
+    <div class="header_image">
+        <a href="https://github.com/clinstid/energydash"><img id="header_logo" alt="energydash" src="{{ url_for('static', filename='images/energydash_logo.png') }}" /></a>
+    </div>
+    <div id="header_menu_button">
+        <img id="header_menu_img" alt="header_menu_img" src="{{ url_for('static', filename='images/menu.png') }}" />
+    </div>
+    <div class="header_menu">
+        <ul id="header_menu">
+            <li><a href="#">Last Hour</a></li>
+            <li><a href="#">Last 24 Hours</a></li>
+            <li><a href="#">Usage by Day of the Week</a></li>
+            <li><a href="#">Usage by Hour of Day</a></li>
+        </ul>
+    </div>
+    <div class="header_elem"><span id="date">{{ date }}</span></div>
+    <div class="header_elem"><span id="usage">{{ usage }}</span> watts</div>
+    <div class="header_elem"><span id="temp_f">{{ temp_f }}</span>&#176; F</div>
+</nav><!-- #header-->
+<div id="header_spacer"> </div>
 
 <div id="current">
     <div class="section_header" id="current_header">
@@ -16,11 +34,8 @@
 
     <div id="current_text_container">
         <div id="current_text">
-            <span id="usage">{{ usage }}</span> watts<br />
-            <span id="temp_f">{{ temp_f }}</span>&#176; F <br />
         </div> <!-- #current_text -->
         <div id="current_text_title">
-            <p><span id="date">{{ date }}</span></p>
         </div>
     </div> <!-- #current_text_container -->
     <div id="current_chart_container">
@@ -98,9 +113,11 @@
     var local_timezone = "{{ local_timezone }}";
     var base_url = "{{ url_for('start_app') }}";
     var tz_url = "{{ url_for('static', filename='tz') }}";
+    var images_url = "{{ url_for('static', filename='images') }}";
 </script>
 
 <script src="{{ url_for('static', filename='js/jquery.js') }}"></script>
+<script src="{{ url_for('static', filename='js/jquery-ui-1.10.3.custom.js') }}"></script>
 <!--[if lte IE 8]><script language="javascript" type="text/javascript" src="{{ url_for('static', filename='js/excanvas.min.js') }}"></script><![endif]-->
 
 <script src="{{ url_for('static', filename='js/timezone-js/date.js') }}"></script>
