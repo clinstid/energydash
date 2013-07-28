@@ -113,7 +113,15 @@ class Stats(object):
             timestamp = reading['reading_timestamp']
             if not current_hour or timestamp >= (current_hour['_id'] + timedelta(hours=1)):
                 if current_hour:
-                    new_id = hours.save(current_hour)
+                    saved = False
+                    while not saved:
+                        try:
+                            new_id = hours.save(current_hour)
+                            saved = True
+                        except Exception as e:
+                            logger.error('Failed to save current hour: {}'.format(e))
+                            sleep(1)
+
                     logger.info("Moving to new hour {}".format(new_id))
 
                 current_hour_start = datetime(year=timestamp.year,
@@ -154,10 +162,26 @@ class Stats(object):
                 reading_bookmark['timestamp'] = timestamp 
 
         if current_hour:
-            new_id = hours.save(current_hour)
+            saved = False
+            while not saved:
+                try:
+                    new_id = hours.save(current_hour)
+                    saved = True
+                except Exception as e:
+                    logger.error('Failed to save current hour: {}'.format(e))
+                    sleep(1)
+
             logger.debug('Saved hour document {}'.format(new_id))
         if reading_bookmark:
-            bookmarks.save(reading_bookmark)
+            saved = False
+            while not saved:
+                try:
+                    bookmarks.save(reading_bookmark)
+                    saved = True
+                except Exception as e:
+                    logger.error('Failed to save reading bookmark: {}'.format(e))
+                    sleep(1)
+
             logger.info('Saved bookmark at {}.'.format(reading_bookmark))
 
     def update_hours_per_day_from_hours(self):
@@ -322,15 +346,39 @@ class Stats(object):
 
         # Save our updates to the DB
         for hour, doc in hours_cache.iteritems():
-            hours_in_day.save(doc)
+            saved = False
+            while not saved:
+                try:
+                    hours_in_day.save(doc)
+                    saved = True
+                except Exception as e:
+                    logger.error('Failed to save hours in day: {}'.format(e))
+                    sleep(1)
+
             logger.info('Saved hour {}.'.format(hour))
 
         for day, doc in days_cache.iteritems():
-            hours_per_dow.save(doc)
+            saved = False
+            while not saved:
+                try:
+                    hours_per_dow.save(doc)
+                    saved = True
+                except Exception as e:
+                    logger.error('Failed to save day of week: {}'.format(e))
+                    sleep(1)
+
             logger.info('Saved day {}.'.format(day))
 
         # Save the last bookmark we processed.
-        bookmarks.save(hour_bookmark)
+        saved = False
+        while not saved:
+            try:
+                bookmarks.save(hour_bookmark)
+                saved = True
+            except Exception as e:
+                logger.error('Failed to save hour bookmark: {}'.format(e))
+                sleep(1)
+
         logger.info('Saved bookmark {}'.format(hour_bookmark))
 
     def update_stats(self):
