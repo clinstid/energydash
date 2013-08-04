@@ -107,7 +107,7 @@ class Stats(object):
 
             if reading['total_watts'] == 0 or reading['temp_f'] == 0:
                 logger.info('Skipping reading at {}: total_watts({}) temp_f({})'.format(
-                            reading['total_watts'], reading['temp_f']))
+                            reading['reading_timestamp'], reading['total_watts'], reading['temp_f']))
                 continue
 
             timestamp = reading['reading_timestamp']
