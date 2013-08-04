@@ -11,7 +11,7 @@ There were a few that existed that had relatively advanced software for drawing 
 
 ## Screenshot ##
 
-![alt text](https://github.com/clinstid/energydash/raw/master/images/energydash_screenshot_2013-07-14.png "energydash screenshot")
+![alt text](https://github.com/clinstid/energydash/raw/master/images/energydash_screenshot_2013-08-04.png "energydash screenshot")
 
 ## High Level Design ##
 
