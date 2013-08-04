@@ -2,51 +2,36 @@
 {% block head %}
 {{ super() }}
 <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}" type="text/css" media="screen, projection" />
-<link rel="stylesheet" href="{{ url_for('static', filename='css/dark_lightning/jquery-ui-1.10.3.custom.css') }}" type="text/css" media="screen, projection" />
 {% endblock %}
 
 {% block body %}
 <nav id="header">
     <div class="header_image">
-        <a href="https://github.com/clinstid/energydash"><img id="header_logo" alt="energydash" src="{{ url_for('static', filename='images/energydash_logo.png') }}" /></a>
-    </div>
-    <div id="header_menu_button">
-        <img id="header_menu_img" alt="header_menu_img" src="{{ url_for('static', filename='images/menu.png') }}" />
-    </div>
-    <div class="header_menu">
-        <ul id="header_menu">
-            <li><a href="#">Last Hour</a></li>
-            <li><a href="#">Last 24 Hours</a></li>
-            <li><a href="#">Usage by Day of the Week</a></li>
-            <li><a href="#">Usage by Hour of Day</a></li>
-        </ul>
+        <a href="https://github.com/clinstid/energydash" target="_blank"><img id="header_logo" alt="energydash" src="{{ url_for('static', filename='images/energydash_logo.png') }}" /></a>
     </div>
     <div class="header_elem"><span id="date">{{ date }}</span></div>
     <div class="header_elem"><span id="usage">{{ usage }}</span> watts</div>
     <div class="header_elem"><span id="temp_f">{{ temp_f }}</span>&#176; F</div>
+    <ul id="header_menu">
+        <li><a href="#last_hour">Last Hour</a></li>
+        <li>&nbsp;| <a href="#last_24_hours">Last 24 Hours</a></li>
+        <li>&nbsp;| <a href="#dow">Usage by Day of the Week</a></li>
+        <li>&nbsp;| <a href="#hod">Usage by Hour of Day</a></li>
+    </ul>
 </nav><!-- #header-->
 <div id="header_spacer"> </div>
 
-<div id="current">
-    <div class="section_header" id="current_header">
-        Most Recent
-    </div> <!-- #current_header -->
-
-    <div id="current_text_container">
-        <div id="current_text">
-        </div> <!-- #current_text -->
-        <div id="current_text_title">
-        </div>
-    </div> <!-- #current_text_container -->
-    <div id="current_chart_container">
-        <div id="current_chart">
-            <!-- This is filled by javascript -->
-        </div> <!-- #current_chart -->
-    </div><!-- #current_chart_container -->
-</div><!-- #current -->
-
 <div id="content">
     <div id="content_body">
+        <span class="anchor" id="last_hour"></span>
+        <div class="content_container" id="last_hour">
+            <div class="section_header" id="last_hour_header">
+                Last Hour
+            </div> <!-- #last_hour_header -->
+            <div class="content_chart" id="last_hour_chart">
+            </div> <!-- #last_hour_chart -->
+        </div> <!-- last_hour -->
+        <span class="anchor" id="last_24_hours"></span>
         <div class="content_container" id="last_24_hours">
             <div class="section_header" id="last_24_hours_header">
                 Last 24 Hours
@@ -92,6 +77,7 @@
                 </table>
             </div> <!-- #last_24_hours_table -->
         </div> <!-- #last_24_hours -->
+        <span class="anchor" id="dow"></span>
         <div class="content_container" id="dow">
             <div class="section_header" id="dow_header">
                 Usage by Day
@@ -99,6 +85,7 @@
             <div class="content_chart" id="dow_chart">
             </div> <!-- #dow_chart -->
         </div> <!-- #dow -->
+        <span class="anchor" id="hod"></span>
         <div class="content_container" id="hod">
             <div class="section_header" id="hod_header">
                 Usage by Hour of Day
@@ -117,7 +104,6 @@
 </script>
 
 <script src="{{ url_for('static', filename='js/jquery.js') }}"></script>
-<script src="{{ url_for('static', filename='js/jquery-ui-1.10.3.custom.js') }}"></script>
 <!--[if lte IE 8]><script language="javascript" type="text/javascript" src="{{ url_for('static', filename='js/excanvas.min.js') }}"></script><![endif]-->
 
 <script src="{{ url_for('static', filename='js/timezone-js/date.js') }}"></script>

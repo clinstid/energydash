@@ -26,7 +26,7 @@ function handle_current_state(data)
     $("#current #current_text_title #date").text(response.date);
 }
 
-function handle_current_chart(data)
+function handle_last_hour(data)
 {
     var usage_data = jQuery.parseJSON(data);
     var plot_data = [{ 
@@ -46,12 +46,7 @@ function handle_current_chart(data)
                         borderColor: "rgb(235, 235, 235)",
                     },
     };
-    window.charts["current_chart"] = $.plot("#current_chart", plot_data, options);
-}
-
-function handle_content_chart()
-{
-    console.log("%s", arguments.callee.name);
+    window.charts["last_hour"] = $.plot("#last_hour_chart", plot_data, options);
 }
 
 function handle_last_24_hours(data)
@@ -101,15 +96,14 @@ function redraw_chart(name, chart_plot)
     chart_plot.draw();
 }
 
-function update_current_chart()
+function update_last_hour()
 {
-    $.get(base_url + "current_chart", handle_current_chart);
+    $.get(base_url + "last_hour", handle_last_hour);
 }
 
 function update_current_stats()
 {
     $.get(base_url + "current_state", handle_current_state);
-    update_current_chart();
 }
 
 function handle_hod(data)
@@ -179,6 +173,7 @@ function update_last_24_hours()
 
 function update_content_stats()
 {
+    update_last_hour();
     update_last_24_hours();
     update_dow();
     update_hod();

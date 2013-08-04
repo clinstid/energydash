@@ -88,10 +88,10 @@ def start_app():
                            usage=last_entry['usage'],
                            temp_f=last_entry['tempf'])
 
-@app.route('/current_chart')
-def fetch_current_chart():
+@app.route('/last_hour')
+def fetch_last_hour():
     last_hour = get_last_hour()
-    logger = logging.getLogger('current_chart')
+    logger = logging.getLogger('last_hour')
     logger.info('{} entries from the last hour: {} --> {}.'.format(len(last_hour), 
                                                                    last_hour[0][0], 
                                                                    last_hour[-1][0]))
