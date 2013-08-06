@@ -144,7 +144,7 @@ div.content_table
 
 div.content_chart
 {
-    margin: 0.3em;
+    margin: 0.3em auto;
     width: 98%;
     height: 300px;
     clear: both;

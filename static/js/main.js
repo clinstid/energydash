@@ -27,10 +27,18 @@ function update_header_spacer()
     $(".anchor").css("marginTop", -1*new_height);
 }
 
+function update_content_width()
+{
+    new_width = $("#header").width();
+    $("#content").width(new_width);
+}
+
 function window_resize() 
 {
     // set the size of the header spacer
     update_header_spacer();
+
+    update_content_width();
 
     // If the window is resized, then we'll need to redraw the current chart.
     for (name in window.charts)
