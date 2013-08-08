@@ -49,6 +49,38 @@ function handle_last_hour(data)
     window.charts["last_hour"] = $.plot("#last_hour_chart", plot_data, options);
 }
 
+function handle_last_7_days(data)
+{
+    var plot_data = jQuery.parseJSON(data);
+    // console.log("Local timezone is %s", local_timezone);
+    var options = 
+    { 
+        legend:
+        {
+            position: "nw",
+        },
+        xaxis: 
+        { 
+            mode: "time", 
+            timezone: local_timezone,
+        },
+        grid:
+        {
+            autoHighlight: true,
+            hoverable: true,
+            borderColor: "rgb(235, 235, 235)",
+        },
+        yaxes:
+        [
+            {},
+            {
+                position: "right"
+            }
+        ]
+    };
+    window.charts["last_7_days"] = $.plot("#last_7_days_chart", plot_data, options);
+}
+
 function handle_last_24_hours(data)
 {
     var response = jQuery.parseJSON(data);
@@ -99,6 +131,11 @@ function redraw_chart(name, chart_plot)
 function update_last_hour()
 {
     $.get(base_url + "last_hour", handle_last_hour);
+}
+
+function update_last_7_days()
+{
+    $.get(base_url + "last_7_days", handle_last_7_days);
 }
 
 function update_current_stats()
@@ -174,6 +211,7 @@ function update_last_24_hours()
 function update_content_stats()
 {
     update_last_hour();
+    update_last_7_days();
     update_last_24_hours();
     update_dow();
     update_hod();

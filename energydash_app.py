@@ -98,6 +98,39 @@ def fetch_last_hour():
     logger.debug(last_hour)
     return json.dumps(last_hour)
 
+@app.route('/last_7_days')
+def get_last_7_days():
+    now = datetime.now(tz=pytz.utc)
+    seven_days_ago = now - timedelta(days=7)
+    cursor = hours.find({'_id': {'$gte': seven_days_ago}}, 
+                        {'_id': 1, 'average_usage': 1, 'average_tempf': 1})
+    cursor = cursor.sort('_id', pymongo.ASCENDING)
+
+    # TODO This should really be done with an aggregation!
+    usage_list = []
+    tempf_list = []
+    for hour in cursor: 
+        usage_list.append([int(dt_to_seconds(hour['_id']))*1000,
+                           hour['average_usage']])
+        tempf_list.append([int(dt_to_seconds(hour['_id']))*1000,
+                           hour['average_tempf']])
+
+    hours_list = [
+                  {
+                   'label': 'Usage (watts)',
+                   'data': sorted(usage_list, key=lambda hour: hour[0]),
+                   'yaxis': 1
+                   },
+                  {
+                   'label': 'Temperature (&#176; F)',
+                   'data': sorted(tempf_list, key=lambda hour: hour[0]),
+                   'yaxis': 2
+                   }
+                  ]
+
+    return json.dumps(hours_list)
+
+
 @app.route('/current_state')
 def fetch_current_state():
     last_entry = get_last_entry()
@@ -143,6 +176,9 @@ def last_24_hours():
                             'average_usage': 1,
                             'average_tempf': 1
                         })
+    cursor = cursor.sort('_id', pymongo.ASCENDING)
+
+    # TODO This should really be done with an aggregation!
     for hour in cursor: 
         usage_list.append([int(dt_to_seconds(hour['_id']))*1000,
                            hour['average_usage']])
