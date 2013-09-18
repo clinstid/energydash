@@ -21,9 +21,9 @@ function handle_current_state(data)
 {
     // console.log(data);
     var response = jQuery.parseJSON(data);
-    $("#current #current_text #usage").text(response.usage);
-    $("#current #current_text #temp_f").text(response.temp_f);
-    $("#current #current_text_title #date").text(response.date);
+    $("#usage").text(response.usage);
+    $("#temp_f").text(response.temp_f);
+    $("#date").text(response.date);
 }
 
 function handle_last_hour(data)
