@@ -2,7 +2,7 @@
 
 ################################################################################
 # file:        energydash_statsd.py
-# description: energydash stats update daemon 
+# description: energydash stats update daemon
 ################################################################################
 # Copyright 2013 Chris Linstid
 #
@@ -94,7 +94,15 @@ class Stats(object):
             }
 
         logger.info('{} total readings.'.format(readings.count()))
-        readings.ensure_index('reading_timestamp', pymongo.ASCENDING)
+
+        index_ensured = False;
+        while not index_ensured:
+            try:
+                readings.ensure_index('reading_timestamp', pymongo.ASCENDING)
+                index_ensured = True;
+            except Exception as e:
+                logger.info('Failed to ensure index, retrying.')
+
         cursor = readings.find(query).sort('reading_timestamp', pymongo.ASCENDING)
         logger.info('{} new readings since last bookmark.'.format(cursor.count()));
 
@@ -159,7 +167,7 @@ class Stats(object):
                     'timestamp': timestamp
                 }
             else:
-                reading_bookmark['timestamp'] = timestamp 
+                reading_bookmark['timestamp'] = timestamp
 
         if current_hour:
             saved = False
@@ -211,7 +219,7 @@ class Stats(object):
         bookmarks = self.db.bookmarks
 
         logger.info('Updating hours per day/dow from hours collection.')
-        
+
         # We use a single bookmark for both hours per day of week and hours in
         # day because we're building those off of the same collection of hours.
         hour_bookmark = bookmarks.find_one({'_id': 'hours'})
@@ -274,14 +282,14 @@ class Stats(object):
 
             if not hour['_id'] in current_hour_of_day['timestamps']:
                 # Update the usage average.
-                (current_hour_of_day['average_usage'], 
+                (current_hour_of_day['average_usage'],
                  temp_count) = update_average(
                                               old_average=current_hour_of_day['average_usage'],
                                               old_count=current_hour_of_day['count'],
                                               new_value=hour['average_usage'])
 
                 # Update the tempf average.
-                (current_hour_of_day['average_tempf'], 
+                (current_hour_of_day['average_tempf'],
                  current_hour_of_day['count']) = update_average(
                     old_average=current_hour_of_day['average_tempf'],
                     old_count=current_hour_of_day['count'],
