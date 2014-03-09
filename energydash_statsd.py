@@ -45,9 +45,17 @@ class Stats(object):
                                                                            password=urllib.quote(MONGO_PASSWORD),
                                                                            host=MONGO_HOST,
                                                                            database=MONGO_DATABASE_NAME)
-        self.client = pymongo.MongoReplicaSetClient(hosts_or_uri=mongo_uri,
-                                                    replicaSet=MONGO_REPLICA_SET,
-                                                    read_preference=pymongo.read_preferences.ReadPreference.PRIMARY_PREFERRED)
+        connected = False
+        while not connected:
+            try:
+                self.client = pymongo.MongoReplicaSetClient(hosts_or_uri=mongo_uri,
+                                                            replicaSet=MONGO_REPLICA_SET,
+                                                            read_preference=pymongo.read_preferences.ReadPreference.PRIMARY_PREFERRED)
+                connected = True
+            except pymongo.errors.ConnectionFailure as e:
+                logger.info('Failed to connect to mongodb [{}], retrying.'.format(e))
+                sleep(1)
+
         self.db = self.client[MONGO_DATABASE_NAME]
         self.logger = logging.getLogger('Stats')
 
@@ -102,6 +110,8 @@ class Stats(object):
                 index_ensured = True;
             except Exception as e:
                 logger.info('Failed to ensure index, retrying.')
+                sleep(1)
+
 
         cursor = readings.find(query).sort('reading_timestamp', pymongo.ASCENDING)
         logger.info('{} new readings since last bookmark.'.format(cursor.count()));
