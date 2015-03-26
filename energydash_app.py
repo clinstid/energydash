@@ -37,9 +37,7 @@ mongo_uri = 'mongodb://{user}:{password}@{host}/{database}'.format(user=urllib.q
                                                                    password=urllib.quote(MONGO_PASSWORD),
                                                                    host=MONGO_HOST,
                                                                    database=MONGO_DATABASE_NAME)
-client = pymongo.MongoReplicaSetClient(hosts_or_uri=mongo_uri,
-                                       replicaSet=MONGO_REPLICA_SET,
-                                       read_preference=pymongo.read_preferences.ReadPreference.NEAREST)
+client = pymongo.MongoClient(MONGO_HOST, replicaset=MONGO_REPLICA_SET)
 db = client[MONGO_DATABASE_NAME]
 readings = db.envir_reading
 hours = db.hours
@@ -56,7 +54,7 @@ day_map = {
            }
 
 def get_min(entries, key):
-    return min(map(lambda entry: entry[key], entries)) 
+    return min(map(lambda entry: entry[key], entries))
 
 def get_max(entries, key):
     return max(map(lambda entry: entry[key], entries))
@@ -74,9 +72,9 @@ def get_last_hour():
     readings.ensure_index('reading_timestamp', pymongo.ASCENDING)
     cursor = readings.find({'reading_timestamp': {'$gte': one_hour_ago}})
     cursor = cursor.sort('reading_timestamp', pymongo.ASCENDING)
-    return map(lambda reading: [int(dt_to_seconds(reading['reading_timestamp']))*1000, 
-                                reading['total_watts']], 
-               cursor) 
+    return map(lambda reading: [int(dt_to_seconds(reading['reading_timestamp']))*1000,
+                                reading['total_watts']],
+               cursor)
 
 @app.route('/')
 def start_app():
@@ -92,8 +90,8 @@ def start_app():
 def fetch_last_hour():
     last_hour = get_last_hour()
     logger = logging.getLogger('last_hour')
-    logger.info('{} entries from the last hour: {} --> {}.'.format(len(last_hour), 
-                                                                   last_hour[0][0], 
+    logger.info('{} entries from the last hour: {} --> {}.'.format(len(last_hour),
+                                                                   last_hour[0][0],
                                                                    last_hour[-1][0]))
     logger.debug(last_hour)
     return json.dumps(last_hour)
@@ -102,14 +100,14 @@ def fetch_last_hour():
 def get_last_7_days():
     now = datetime.now(tz=pytz.utc)
     seven_days_ago = now - timedelta(days=7)
-    cursor = hours.find({'_id': {'$gte': seven_days_ago}}, 
+    cursor = hours.find({'_id': {'$gte': seven_days_ago}},
                         {'_id': 1, 'average_usage': 1, 'average_tempf': 1})
     cursor = cursor.sort('_id', pymongo.ASCENDING)
 
     # TODO This should really be done with an aggregation!
     usage_list = []
     tempf_list = []
-    for hour in cursor: 
+    for hour in cursor:
         usage_list.append([int(dt_to_seconds(hour['_id']))*1000,
                            hour['average_usage']])
         tempf_list.append([int(dt_to_seconds(hour['_id']))*1000,
@@ -179,7 +177,7 @@ def last_24_hours():
     cursor = cursor.sort('_id', pymongo.ASCENDING)
 
     # TODO This should really be done with an aggregation!
-    for hour in cursor: 
+    for hour in cursor:
         usage_list.append([int(dt_to_seconds(hour['_id']))*1000,
                            hour['average_usage']])
         tempf_list.append([int(dt_to_seconds(hour['_id']))*1000,
@@ -224,13 +222,13 @@ def get_dow():
                                     '_id': 1,
                                     'hours': 1
                                 })
-    days = [] 
+    days = []
     for day in cursor:
         hour_list = []
         for hour, data in day['hours'].iteritems():
             hour_list.append([int(hour), data['average_usage']])
         hour_list = sorted(hour_list, key=lambda hour: hour[0])
-        days.append({ 
+        days.append({
                      'label': day['_id'],
                      'data': hour_list
                     })
