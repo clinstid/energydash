@@ -2,7 +2,7 @@
 
 ################################################################################
 # file:        envir_collector.py
-# description: energydash EnviR data collector 
+# description: energydash EnviR data collector
 ################################################################################
 # Copyright 2013 Chris Linstid
 #
@@ -19,7 +19,6 @@
 # limitations under the License.
 ################################################################################
 
-import pymongo
 import logging
 from serial import *
 from threading import Thread
@@ -29,7 +28,7 @@ import pytz
 from Queue import Queue
 from time import sleep
 import xml.etree.ElementTree as ET
-import pymongo
+from pymongo import MongoClient
 from dateutil.tz import tzlocal
 import urllib
 
@@ -66,9 +65,9 @@ class EnvirMsg(object):
     CH3_TAG = 'ch3'
     WATTS_TAG = 'watts'
 
-    birth_date = datetime(year=ENVIR_BIRTH_YEAR, 
-                          month=ENVIR_BIRTH_MONTH, 
-                          day=ENVIR_BIRTH_DAY, 
+    birth_date = datetime(year=ENVIR_BIRTH_YEAR,
+                          month=ENVIR_BIRTH_MONTH,
+                          day=ENVIR_BIRTH_DAY,
                           tzinfo=tzlocal())
 
     def __init__(self, timestamp, body):
@@ -113,7 +112,7 @@ class EnvirMsg(object):
             self.ch3_watts = 0
 
         self.total_watts = self.ch1_watts + self.ch2_watts + self.ch3_watts
-        
+
         time_split = self.time24.split(':')
         hours = int(time_split[0])
         minutes = int(time_split[1])
@@ -122,7 +121,7 @@ class EnvirMsg(object):
         self.timestamp = EnvirMsg.birth_date + time_delta_since_birth
 
     def get_db_document(self):
-        return { 
+        return {
                 'reading_timestamp': self.reading_timestamp,
                 'receiver_days_since_birth': self.dsb,
                 'receiver_time': self.time24,
@@ -130,11 +129,11 @@ class EnvirMsg(object):
                 'ch2_watts': self.ch2_watts,
                 'ch3_watts': self.ch3_watts,
                 'total_watts': self.total_watts,
-                'temp_f': self.temp_f 
+                'temp_f': self.temp_f
                }
 
     def print_csv(self, logger):
-         logger.info('"{timestamp}",{total_watts}'.format(timestamp=self.reading_timestamp, 
+         logger.info('"{timestamp}",{total_watts}'.format(timestamp=self.reading_timestamp,
                                                           total_watts=self.total_watts))
 
 class Collector(Thread):
@@ -177,9 +176,7 @@ class Writer(Thread):
                                                                            host=MONGO_HOST,
                                                                            database=MONGO_DATABASE_NAME)
 
-        self.client = pymongo.MongoReplicaSetClient(hosts_or_uri=mongo_uri,
-                                                    replicaSet=MONGO_REPLICA_SET,
-                                                    read_preference=pymongo.read_preferences.ReadPreference.PRIMARY_PREFERRED)
+        self.client = MongoClient(MONGO_HOST, replicaset=MONGO_REPLICA_SET)
         self.db = self.client[MONGO_DATABASE_NAME]
         self.readings = self.db.envir_reading
         self.bookmarks = self.db.bookmarks
@@ -191,8 +188,8 @@ class Writer(Thread):
 
             while not self.exiting:
                 (timestamp, line) = self.work_queue.get()
-                logger.debug('Received: {}: - {} (size={})'.format(timestamp, 
-                                                                  line, 
+                logger.debug('Received: {}: - {} (size={})'.format(timestamp,
+                                                                  line,
                                                                   self.work_queue.qsize()))
                 try:
                     msg = EnvirMsg(timestamp, line)

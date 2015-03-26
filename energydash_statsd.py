@@ -19,6 +19,7 @@
 # limitations under the License.
 ################################################################################
 
+from pymongo import MongoClient
 import pymongo
 import logging
 from time import sleep
@@ -48,9 +49,7 @@ class Stats(object):
         connected = False
         while not connected:
             try:
-                self.client = pymongo.MongoReplicaSetClient(hosts_or_uri=mongo_uri,
-                                                            replicaSet=MONGO_REPLICA_SET,
-                                                            read_preference=pymongo.read_preferences.ReadPreference.PRIMARY_PREFERRED)
+                self.client = MongoClient(MONGO_HOST, replicaset=MONGO_REPLICA_SET)
                 connected = True
             except pymongo.errors.ConnectionFailure as e:
                 logger.info('Failed to connect to mongodb [{}], retrying.'.format(e))
@@ -109,7 +108,7 @@ class Stats(object):
                 readings.ensure_index('reading_timestamp', pymongo.ASCENDING)
                 index_ensured = True;
             except Exception as e:
-                logger.info('Failed to ensure index, retrying.')
+                logger.info('Failed to ensure index ({}), retrying.'.format(e))
                 sleep(1)
 
 
