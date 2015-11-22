@@ -30,11 +30,11 @@ MONGO_DATABASE_NAME='energydash'
 
 # Host name, user name and password are defined in a file NOT in revision
 # control.
-import mongodb_secret 
-MONGO_USER=mongodb_secret.MONGO_USER
-MONGO_PASSWORD=mongodb_secret.MONGO_PASSWORD
-MONGO_HOST=mongodb_secret.MONGO_HOST
-MONGO_REPLICA_SET=mongodb_secret.MONGO_REPLICA_SET
+#  import mongodb_secret
+#  MONGO_USER=mongodb_secret.MONGO_USER
+#  MONGO_PASSWORD=mongodb_secret.MONGO_PASSWORD
+#  MONGO_HOST=mongodb_secret.MONGO_HOST
+#  MONGO_REPLICA_SET=mongodb_secret.MONGO_REPLICA_SET
 
 # The XML provided by the EnviR includes "days since birth" so we need to know
 # the "birth date" so we can calculate the actual timestamp for each message.
@@ -44,7 +44,8 @@ ENVIR_BIRTH_DAY = 18
 ENVIR_BIRTH_TZ_NAME = LOCAL_TIMEZONE
 
 # Serial port options
-ENVIR_SERIAL_PORT = '/dev/ttyUSB0'
+#  ENVIR_SERIAL_PORT = '/dev/ttyUSB0'
+ENVIR_SERIAL_PORT = '/dev/ttyUSB1'
 ENVIR_SERIAL_BAUDRATE = 57600
 import serial
 ENVIR_SERIAL_BYTESIZE = serial.EIGHTBITS

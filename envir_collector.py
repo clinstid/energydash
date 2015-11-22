@@ -28,7 +28,7 @@ import pytz
 from Queue import Queue
 from time import sleep
 import xml.etree.ElementTree as ET
-from pymongo import MongoClient
+#  from pymongo import MongoClient
 from dateutil.tz import tzlocal
 import urllib
 
@@ -171,15 +171,15 @@ class Writer(Thread):
         self.daemon = True
         self.exiting = False
         self.work_queue = work_queue
-        mongo_uri = 'mongodb://{user}:{password}@{host}/{database}'.format(user=urllib.quote(MONGO_USER),
-                                                                           password=urllib.quote(MONGO_PASSWORD),
-                                                                           host=MONGO_HOST,
-                                                                           database=MONGO_DATABASE_NAME)
+        #  mongo_uri = 'mongodb://{user}:{password}@{host}/{database}'.format(user=urllib.quote(MONGO_USER),
+                                                                           #  password=urllib.quote(MONGO_PASSWORD),
+                                                                           #  host=MONGO_HOST,
+                                                                           #  database=MONGO_DATABASE_NAME)
 
-        self.client = MongoClient(MONGO_HOST, replicaset=MONGO_REPLICA_SET)
-        self.db = self.client[MONGO_DATABASE_NAME]
-        self.readings = self.db.envir_reading
-        self.bookmarks = self.db.bookmarks
+        #  self.client = MongoClient(MONGO_HOST, replicaset=MONGO_REPLICA_SET)
+        #  self.db = self.client[MONGO_DATABASE_NAME]
+        #  self.readings = self.db.envir_reading
+        #  self.bookmarks = self.db.bookmarks
 
     def run(self):
         logger = logging.getLogger('writer')
@@ -214,13 +214,13 @@ class Writer(Thread):
                 saved = False
                 while not saved:
                     try:
-                        self.readings.save(reading)
-                        self.bookmarks.save({
-                                             '_id': 'seconds',
-                                             'timestamp': reading['reading_timestamp'],
-                                             'usage': reading['total_watts'],
-                                             'tempf': reading['temp_f']
-                                             })
+                        #  self.readings.save(reading)
+                        #  self.bookmarks.save({
+                                             #  '_id': 'seconds',
+                                             #  'timestamp': reading['reading_timestamp'],
+                                             #  'usage': reading['total_watts'],
+                                             #  'tempf': reading['temp_f']
+                                             #  })
 
                         saved = True
                     except Exception as e:
