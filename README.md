@@ -1,7 +1,4 @@
 # energydash: Energy Monitor Web App #
-
-Try it <a href="http://linstid.com/energydash">here</a>.
-
 I'm working on a new web service in Java: <a href="http://github.com/clinstid/energydashws">energydashws</a>
 
 See the enhancement tag in the Issues list for features I'm planning on adding when I have time.
